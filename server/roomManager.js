@@ -314,10 +314,9 @@ export class RoomManager {
         timestamp: Date.now()
       });
     } else if (card.type === CARD_TYPES.REVERSE) {
+      gameState.direction *= -1;
       if (numPlayers === 2) {
         skipCount = 2;
-      } else {
-        gameState.direction *= -1;
       }
       spellEffect = { type: 'REVERSE', direction: gameState.direction };
       gameState.actionLog.unshift({
