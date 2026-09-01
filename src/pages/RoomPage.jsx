@@ -189,24 +189,9 @@ export default function RoomPage() {
         })}
       </div>
 
-      {/* Bottom Actions Bar */}
+      {/* Bottom Actions Bar (1 Button Per Line) */}
       <div className="room-bottom-actions">
-        <button className="btn-secondary-action btn-leave-chamber" onClick={leaveRoom}>
-          <LogOut size={16} />
-          <span>ออกจากห้อง</span>
-        </button>
-
-        {!isHost && (
-          <button
-            className={`btn-primary-action btn-toggle-ready ${isReady ? 'ready-active' : ''}`}
-            onClick={toggleReady}
-          >
-            <Check size={16} />
-            <span>{isReady ? 'พร้อมแล้ว' : 'กดพร้อม'}</span>
-          </button>
-        )}
-
-        {isHost && (
+        {isHost ? (
           <button
             className="btn-primary-action btn-start-game"
             onClick={handleStartGame}
@@ -215,13 +200,26 @@ export default function RoomPage() {
             <Play size={16} />
             <span>
               {players.length < 2
-                ? 'ต้องการ 2 คนขึ้นไป'
+                ? 'ต้องการผู้เล่นอย่างน้อย 2 คน'
                 : isStarting
                 ? 'กำลังเริ่มเกม...'
                 : 'เริ่มเกมทันที'}
             </span>
           </button>
+        ) : (
+          <button
+            className={`btn-primary-action btn-toggle-ready ${isReady ? 'ready-active' : ''}`}
+            onClick={toggleReady}
+          >
+            <Check size={16} />
+            <span>{isReady ? 'พร้อมแล้ว (แตะเพื่อยกเลิก)' : 'กดพร้อมเล่น'}</span>
+          </button>
         )}
+
+        <button className="btn-secondary-action btn-leave-chamber" onClick={leaveRoom}>
+          <LogOut size={16} />
+          <span>ออกจากห้อง</span>
+        </button>
       </div>
     </div>
   );
