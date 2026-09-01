@@ -175,7 +175,7 @@ export default function LobbyPage({ onOpenProfile, onOpenRules }) {
         {/* Mode 1: Quick Match (Primary Hero Card) */}
         <div className="mode-card mode-quick-play">
           <div className="mode-card-header">
-            <div className="mode-icon-square icon-square-red">
+            <div className="mode-icon-square icon-quick-play-custom">
               <img
                 src="./quick_play.png"
                 alt="Quick Play"
