@@ -104,22 +104,6 @@ export default function LobbyPage({ onOpenProfile, onOpenRules }) {
             <span className="brand-badge-tag">ONLINE ARENA</span>
           </div>
         </div>
-
-        {/* Solid Elemental Chips (Text Only, No Icons) */}
-        <div className="element-chips-bar">
-          {Object.keys(ELEMENT_THEMES).map((key) => {
-            const el = ELEMENT_THEMES[key];
-            return (
-              <div
-                key={key}
-                className={`element-chip chip-${key}`}
-                title={el.name}
-              >
-                <span className="chip-label">{el.name.split(' ')[0]}</span>
-              </div>
-            );
-          })}
-        </div>
       </section>
 
       {/* 2. Duelist Profile Summary (Solid Slate Card) */}
