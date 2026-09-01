@@ -1,4 +1,4 @@
-// src/pages/GamePage.jsx - HORIYA 5-Player Mobile Arena with Circular Vortex Table
+// src/pages/GamePage.jsx - HORIYA 5-Player Mobile Arena with Circular Vortex Table & 3D Flow Arrows
 import React, { useState } from 'react';
 import { useGameSocket } from '../context/GameSocketContext';
 import { useAuth } from '../context/AuthContext';
@@ -11,7 +11,78 @@ import GameOverModal from '../components/game/GameOverModal';
 import SpellEffect from '../components/effects/SpellEffect';
 import { ELEMENT_THEMES } from '../models/cardThemes';
 import { canPlayCard } from '../../server/gameEngine';
-import { ShieldAlert, Layers, PlusCircle, RotateCw } from 'lucide-react';
+import { ShieldAlert, Layers, PlusCircle } from 'lucide-react';
+
+// Sub-component for Smooth 3D Sweeping Game Flow Arrows
+function TurnFlowArrows({ direction = 1 }) {
+  const isClockwise = direction === 1;
+
+  return (
+    <div className={`arena-direction-arrows ${isClockwise ? 'dir-clockwise' : 'dir-counter'}`}>
+      {/* Top Sweeping Arrow */}
+      <div className="curved-arrow-box arrow-box-top">
+        <svg viewBox="0 0 100 36" className="curved-svg-arrow">
+          <defs>
+            <linearGradient id={`arrowGradTop_${direction}`} x1={isClockwise ? "0%" : "100%"} y1="0%" x2={isClockwise ? "100%" : "0%"} y2="0%">
+              <stop offset="0%" stopColor="#FFAA00" stopOpacity="0.25" />
+              <stop offset="50%" stopColor="#FF8800" />
+              <stop offset="100%" stopColor="#FF3300" />
+            </linearGradient>
+            <filter id={`arrowShadowTop_${direction}`} x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="2" stdDeviation="2.5" floodColor="#000000" floodOpacity="0.8" />
+            </filter>
+          </defs>
+          {isClockwise ? (
+            /* Clockwise: sweeps Left -> Right over top */
+            <path
+              d="M 6 26 Q 50 3 80 12 L 74 4 L 96 13 L 81 28 L 77 20 Q 50 11 11 32 Z"
+              fill={`url(#arrowGradTop_${direction})`}
+              filter={`url(#arrowShadowTop_${direction})`}
+            />
+          ) : (
+            /* Counter-Clockwise: sweeps Right -> Left over top */
+            <path
+              d="M 94 26 Q 50 3 20 12 L 26 4 L 4 13 L 19 28 L 23 20 Q 50 11 89 32 Z"
+              fill={`url(#arrowGradTop_${direction})`}
+              filter={`url(#arrowShadowTop_${direction})`}
+            />
+          )}
+        </svg>
+      </div>
+
+      {/* Bottom Sweeping Arrow */}
+      <div className="curved-arrow-box arrow-box-bottom">
+        <svg viewBox="0 0 100 36" className="curved-svg-arrow">
+          <defs>
+            <linearGradient id={`arrowGradBottom_${direction}`} x1={isClockwise ? "100%" : "0%"} y1="0%" x2={isClockwise ? "0%" : "100%"} y2="0%">
+              <stop offset="0%" stopColor="#FFAA00" stopOpacity="0.25" />
+              <stop offset="50%" stopColor="#FF8800" />
+              <stop offset="100%" stopColor="#FF3300" />
+            </linearGradient>
+            <filter id={`arrowShadowBottom_${direction}`} x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="2" stdDeviation="2.5" floodColor="#000000" floodOpacity="0.8" />
+            </filter>
+          </defs>
+          {isClockwise ? (
+            /* Clockwise: sweeps Right -> Left under bottom */
+            <path
+              d="M 94 10 Q 50 33 20 24 L 26 32 L 4 23 L 19 8 L 23 16 Q 50 25 89 4 Z"
+              fill={`url(#arrowGradBottom_${direction})`}
+              filter={`url(#arrowShadowBottom_${direction})`}
+            />
+          ) : (
+            /* Counter-Clockwise: sweeps Left -> Right under bottom */
+            <path
+              d="M 6 10 Q 50 33 80 24 L 74 32 L 96 23 L 81 8 L 77 16 Q 50 25 11 4 Z"
+              fill={`url(#arrowGradBottom_${direction})`}
+              filter={`url(#arrowShadowBottom_${direction})`}
+            />
+          )}
+        </svg>
+      </div>
+    </div>
+  );
+}
 
 export default function GamePage() {
   const { user } = useAuth();
@@ -137,16 +208,9 @@ export default function GamePage() {
 
       {/* 3. Center Circular Table Arena */}
       <div className="mobile-center-table">
-        {/* Golden Ring with Direction Arrows */}
+        {/* Golden Ring with 3D Sweeping Direction Arrows */}
         <div className="mobile-summoning-circle">
-          <div className={`arena-direction-arrows ${gameState.direction === 1 ? 'dir-clockwise' : 'dir-counter'}`}>
-            <div className="arrow-curved arrow-top-right">
-              <RotateCw size={22} />
-            </div>
-            <div className="arrow-curved arrow-bottom-left">
-              <RotateCw size={22} />
-            </div>
-          </div>
+          <TurnFlowArrows direction={gameState.direction || 1} />
         </div>
 
         {/* Stacked Draw Penalty Alert */}
