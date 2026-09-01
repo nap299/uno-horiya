@@ -1248,6 +1248,12 @@ body {
   padding: 2px 4px;
 }
 
+.hud-left-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .hud-room-badge {
   display: flex;
   align-items: center;

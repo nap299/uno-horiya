@@ -35,11 +35,13 @@ export default function App() {
       {/* Background Magic Particle Engine */}
       <ParticleCanvas activeColor={activeColor} />
 
-      {/* Global Header Navigation */}
-      <Header
-        onOpenProfile={() => setShowProfileModal(true)}
-        onOpenRules={() => setShowRulesModal(true)}
-      />
+      {/* Global Header Navigation (Hidden in Game Arena for Fullscreen Immersion) */}
+      {!gameState && (
+        <Header
+          onOpenProfile={() => setShowProfileModal(true)}
+          onOpenRules={() => setShowRulesModal(true)}
+        />
+      )}
 
       {/* Main Dynamic View Area */}
       <main className="app-main-viewport">
