@@ -1254,6 +1254,33 @@ body {
   gap: 6px;
 }
 
+/* Transparent Sound Controls in Arena Top HUD */
+.mobile-top-hud .sound-control-wrapper {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  gap: 4px;
+}
+
+.mobile-top-hud .btn-sound-icon {
+  color: #FFFFFF !important;
+  background: transparent !important;
+  padding: 6px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.9));
+}
+
+.mobile-top-hud .btn-sound-icon svg {
+  color: #FFFFFF !important;
+  stroke: #FFFFFF !important;
+}
+
+.mobile-top-hud .btn-sound-icon:hover,
+.mobile-top-hud .btn-sound-icon:active {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-radius: 8px;
+}
+
 .hud-room-badge {
   display: flex;
   align-items: center;

@@ -171,10 +171,6 @@ export default function GamePage() {
       <div className="mobile-top-hud">
         <div className="hud-left-group">
           <SoundControl />
-          <div className="hud-room-badge">
-            <span className="hud-sanctum-dot" />
-            <span className="hud-code">{room.code}</span>
-          </div>
         </div>
 
         <div className={`hud-turn-notice ${isMyTurn ? 'notice-self animate-pulse-glow' : ''}`}>
