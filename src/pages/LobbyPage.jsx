@@ -215,8 +215,13 @@ export default function LobbyPage({ onOpenProfile, onOpenRules }) {
         {/* Mode 2: Custom Room */}
         <div className="mode-card mode-custom-room">
           <div className="mode-card-header">
-            <div className="mode-icon-square icon-square-amber">
-              <Sliders size={22} />
+            <div className="mode-icon-square icon-mode-custom-logo">
+              <img
+                src="./custom.png"
+                alt="Custom Room"
+                className="mode-custom-icon-img"
+                onError={(e) => { e.target.src = '/custom.png'; }}
+              />
             </div>
             <div className="mode-header-text">
               <div className="mode-tag-pill tag-pill-neutral">
@@ -243,8 +248,13 @@ export default function LobbyPage({ onOpenProfile, onOpenRules }) {
         {/* Mode 3: Join with Room Code */}
         <div className="mode-card mode-join-room">
           <div className="mode-card-header">
-            <div className="mode-icon-square icon-square-blue">
-              <LogIn size={22} />
+            <div className="mode-icon-square icon-mode-custom-logo">
+              <img
+                src="./join.png"
+                alt="Join Room"
+                className="mode-custom-icon-img"
+                onError={(e) => { e.target.src = '/join.png'; }}
+              />
             </div>
             <div className="mode-header-text">
               <div className="mode-tag-pill tag-pill-neutral">

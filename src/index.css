@@ -627,14 +627,16 @@ body {
   overflow: hidden;
 }
 
-.mode-icon-square.icon-quick-play-custom {
+.mode-icon-square.icon-quick-play-custom,
+.mode-icon-square.icon-mode-custom-logo {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
   padding: 0 !important;
 }
 
-.quick-play-icon-img {
+.quick-play-icon-img,
+.mode-custom-icon-img {
   width: 44px;
   height: 44px;
   object-fit: cover;
