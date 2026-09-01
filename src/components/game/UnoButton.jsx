@@ -1,21 +1,21 @@
-// src/components/game/UnoButton.jsx - Burning Arcane UNO Shout Button
+// src/components/game/UnoButton.jsx - UNO Shout Button (Active Color vs Muted Disabled)
 import React from 'react';
 import { Flame } from 'lucide-react';
 
-export default function UnoButton({ onShoutUno, hasCalledUno = false, isUrgent = false }) {
+export default function UnoButton({ onShoutUno, hasCalledUno = false, canCall = false, isUrgent = false }) {
+  const isClickable = canCall && !hasCalledUno;
+
   return (
     <button
-      className={`uno-shout-button ${isUrgent ? 'uno-urgent animate-pulse-fast' : ''} ${hasCalledUno ? 'uno-active' : ''}`}
-      onClick={onShoutUno}
-      disabled={hasCalledUno}
-      title="กดเรียก UNO เมื่อเหลือไพ่ใบเดียวในมือ!"
+      className={`uno-shout-button ${isClickable ? 'uno-can-call animate-pulse-glow' : 'uno-disabled'} ${isUrgent ? 'uno-urgent' : ''} ${hasCalledUno ? 'uno-called' : ''}`}
+      onClick={isClickable ? onShoutUno : undefined}
+      disabled={!isClickable}
+      title={isClickable ? "กดเรียก UNO เมื่อเหลือไพ่ 1-2 ใบ!" : "ยังเรียก UNO ไม่ได้"}
     >
-      <div className="uno-btn-glow" />
       <div className="uno-btn-content">
-        <Flame className="uno-fire-icon" size={22} />
+        <Flame className="uno-fire-icon" size={18} />
         <span className="uno-text">{hasCalledUno ? 'เรียก UNO แล้ว!' : 'UNO!'}</span>
       </div>
-      <div className="uno-sparkles" />
     </button>
   );
 }

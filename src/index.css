@@ -1555,16 +1555,33 @@ body {
   transform: translateX(-50%);
   background: #D90429;
   color: #FFFFFF;
-  font-size: 0.62rem;
-  font-weight: 900;
+  font-size: 0.65rem;
+  font-weight: 500;
   padding: 2px 8px;
   border-radius: 6px;
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
   white-space: nowrap;
   box-shadow: 0 2px 0 #9E1C27;
   border: 1px solid #FF5C6A;
+  z-index: 10;
+}
+
+/* Must Draw Highlight: เมื่อถึงตาเราและไม่มีการ์ดที่ลงได้ */
+.mobile-draw-deck.deck-must-draw .fantasy-card {
+  border-color: #F59E0B !important;
+  box-shadow: 0 0 0 3px #F59E0B, 0 0 24px rgba(245, 158, 11, 0.75), 0 8px 24px rgba(0, 0, 0, 0.9) !important;
+  animation: pulseUrgent 1s infinite alternate;
+}
+
+.mobile-draw-badge.badge-urgent-draw {
+  background: #F59E0B !important;
+  color: #0B0E17 !important;
+  font-weight: 600 !important;
+  font-size: 0.72rem !important;
+  border: 1.5px solid #FFFFFF !important;
+  box-shadow: 0 3px 12px rgba(245, 158, 11, 0.8) !important;
 }
 
 .mobile-deck-count {
@@ -1579,7 +1596,7 @@ body {
   align-items: center;
   gap: 2px;
   font-size: 0.58rem;
-  font-weight: 800;
+  font-weight: 500;
   color: var(--text-secondary);
 }
 
@@ -1590,7 +1607,7 @@ body {
 .empty-pile-placeholder {
   font-size: 0.75rem;
   color: var(--text-muted);
-  font-weight: 600;
+  font-weight: 400;
 }
 
 /* Floating Action Controls */
@@ -1604,22 +1621,73 @@ body {
   width: 100%;
 }
 
-.uno-shout-button {
-  position: relative;
-  background: #D90429;
-  border: 1px solid #EF233C;
-  border-radius: 25px;
-  padding: 6px 16px;
-  color: #FFF;
-  cursor: pointer;
-  box-shadow: 0 4px 0 #9E1C27, 0 6px 16px rgba(217, 4, 41, 0.35);
-  transition: transform 0.08s ease, box-shadow 0.08s ease;
-  min-height: 40px;
+.hand-status-indicator {
+  display: flex;
+  align-items: center;
 }
 
-.uno-shout-button:active:not(:disabled) {
-  transform: translateY(2px);
-  box-shadow: 0 2px 0 #9E1C27;
+.must-draw-text-hint {
+  font-size: 0.72rem;
+  color: #FBBF24;
+  font-weight: 400;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+/* UNO Shout Button (Active vs Disabled States) */
+.uno-shout-button {
+  position: relative;
+  border-radius: 25px;
+  padding: 6px 16px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, background-color 0.15s ease;
+}
+
+/* กดได้ (สีสดเด่น ไฟลุก) */
+.uno-shout-button.uno-can-call {
+  background: #D90429;
+  border: 1.5px solid #FFFFFF;
+  color: #FFFFFF;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #9E1C27, 0 0 16px rgba(217, 4, 41, 0.6);
+}
+
+.uno-shout-button.uno-can-call:hover {
+  transform: scale(1.05);
+}
+
+.uno-shout-button.uno-can-call:active {
+  transform: scale(0.96);
+  box-shadow: 0 1px 0 #9E1C27;
+}
+
+/* กดไม่ได้ (สีทึบ มัว ไม่เกะกะสายตา) */
+.uno-shout-button.uno-disabled {
+  background: #141A26;
+  border: 1px solid #232D40;
+  color: #64748B;
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.uno-shout-button.uno-disabled .uno-fire-icon {
+  color: #64748B;
+}
+
+/* เรียก UNO แล้ว */
+.uno-shout-button.uno-called {
+  background: #0F8A5F;
+  border: 1.5px solid #13A874;
+  color: #FFFFFF;
+  opacity: 0.85;
+  cursor: default;
+  box-shadow: 0 2px 6px rgba(15, 138, 95, 0.4);
 }
 
 .uno-btn-content {
@@ -1628,94 +1696,8 @@ body {
   gap: 6px;
   font-family: var(--font-rune);
   font-size: 0.92rem;
-  font-weight: 900;
+  font-weight: 600;
   letter-spacing: 1px;
-}
-
-.my-emote-anchor {
-  position: relative;
-  display: flex;
-  align-items: center;
-  z-index: 50;
-}
-
-.btn-open-emote {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #1A2232;
-  border: 1px solid #2C384E;
-  color: #FFFFFF;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 3px 0 #101520;
-  transition: transform 0.08s ease;
-}
-
-.btn-open-emote:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 #101520;
-}
-
-.btn-open-emote svg {
-  color: #FFFFFF !important;
-  stroke: #FFFFFF !important;
-}
-
-.emote-tray {
-  position: absolute;
-  bottom: calc(100% + 12px);
-  left: 0;
-  background: #121724;
-  border: 1px solid #28344C;
-  border-radius: 16px;
-  padding: 12px;
-  width: 228px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.8);
-  z-index: 70;
-}
-
-.emote-tray-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid #20283A;
-}
-
-.tray-title {
-  font-family: var(--font-rune);
-  font-size: 0.72rem;
-  font-weight: 900;
-  color: #FFFFFF;
-  letter-spacing: 1px;
-}
-
-.emote-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-}
-
-.emote-btn {
-  background: #181E2C;
-  border: 1px solid #263145;
-  border-radius: 8px;
-  padding: 8px 2px 6px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  transition: transform 0.1s ease;
-}
-
-.emote-btn:hover {
-  background: #20293A;
-  border-color: #384660;
 }
 
 .emote-btn:active {

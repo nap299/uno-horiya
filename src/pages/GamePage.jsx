@@ -1,4 +1,4 @@
-// src/pages/GamePage.jsx - HORIYA Mobile-First Arena (No Emojis, No Sparkles)
+// src/pages/GamePage.jsx - HORIYA Mobile-First Arena (Clean UX, Prominent Draw & Smart UNO)
 import React, { useState } from 'react';
 import { useGameSocket } from '../context/GameSocketContext';
 import { useAuth } from '../context/AuthContext';
@@ -7,13 +7,11 @@ import HandFan from '../components/card/HandFan';
 import ColorPickerModal from '../components/card/ColorPickerModal';
 import PlayerAvatar from '../components/game/PlayerAvatar';
 import UnoButton from '../components/game/UnoButton';
-import EmoteWheel from '../components/game/EmoteWheel';
 import GameOverModal from '../components/game/GameOverModal';
-import GameLog from '../components/game/GameLog';
 import SpellEffect from '../components/effects/SpellEffect';
 import { ELEMENT_THEMES } from '../models/cardThemes';
-import { ElementIcon, ReactionIcon } from '../utils/IconRenderer';
-import { RotateCw, RotateCcw, ShieldAlert, Layers, PlusCircle } from 'lucide-react';
+import { canPlayCard } from '../../server/gameEngine';
+import { ShieldAlert, Layers, PlusCircle, Sparkles } from 'lucide-react';
 
 export default function GamePage() {
   const { user } = useAuth();
@@ -23,12 +21,10 @@ export default function GamePage() {
     gameState,
     timeRemaining,
     activeSpell,
-    floatingEmotes,
     playCard,
     drawCard,
     shoutUno,
     calloutUno,
-    sendEmote,
     startGame,
     leaveRoom
   } = useGameSocket();
@@ -47,7 +43,15 @@ export default function GamePage() {
   const activeColor = gameState.activeColor || topCard?.color || 'ruby';
   const theme = ELEMENT_THEMES[activeColor] || ELEMENT_THEMES.ruby;
 
+  // ตรวจสอบว่าในมือมีไพ่ที่สามารถลงได้หรือไม่
+  const hasPlayableCard = myHand.some(card =>
+    canPlayCard(card, topCard, activeColor, gameState.stackedDrawCount, gameState.rules)
+  );
+  const mustDraw = isMyTurn && !hasPlayableCard;
+
+  // สถานะการเรียก UNO
   const myUnoState = gameState.playerCardCounts?.[myId] || { hasCalledUno: false, count: myHand.length };
+  const canCallUno = !myUnoState.hasCalledUno && (myHand.length <= 2 || myUnoState.mustCallUno);
   const isUrgentUno = myHand.length <= 2 && !myUnoState.hasCalledUno;
 
   // เรียงคู่ต่อสู้ให้ขึ้นอยู่กับตำแหน่งของตัวเอง
@@ -81,8 +85,6 @@ export default function GamePage() {
     if (isMyTurn) drawCard();
   };
 
-  const myEmote = floatingEmotes.find(e => e.playerId === myId);
-
   return (
     <div
       className="mobile-arena-container"
@@ -115,7 +117,6 @@ export default function GamePage() {
         {reorderedOpponents.map((opp) => {
           const oppCardData = gameState.playerCardCounts?.[opp.id] || { count: 7, hasCalledUno: false, mustCallUno: false };
           const isOppTurn = currentPlayer?.id === opp.id;
-          const oppEmote = floatingEmotes.find(e => e.playerId === opp.id);
 
           return (
             <PlayerAvatar
@@ -128,7 +129,6 @@ export default function GamePage() {
               hasCalledUno={oppCardData.hasCalledUno}
               mustCallUno={oppCardData.mustCallUno}
               onCalloutUno={(targetId) => calloutUno(targetId)}
-              floatingEmote={oppEmote}
             />
           );
         })}
@@ -137,16 +137,6 @@ export default function GamePage() {
       {/* 3. Center Arena Table */}
       <div className="mobile-center-table">
         <div className="mobile-summoning-circle" style={{ borderColor: theme.primary }} />
-
-        {/* Center Reaction Splash */}
-        {floatingEmotes.length > 0 && (
-          <div className="center-reaction-splash animate-bounce-pop" key={floatingEmotes[floatingEmotes.length - 1].id}>
-            <div className="reaction-splash-bubble">
-              <ReactionIcon id={floatingEmotes[floatingEmotes.length - 1].emoji} size={22} />
-              <span className="reaction-splash-name">{floatingEmotes[floatingEmotes.length - 1].playerName}</span>
-            </div>
-          </div>
-        )}
 
         {/* Stacked Draw Penalty Alert */}
         {gameState.stackedDrawCount > 0 && (
@@ -159,7 +149,7 @@ export default function GamePage() {
         <div className="mobile-table-piles">
           {/* Draw Pile */}
           <div
-            className={`mobile-draw-deck ${isMyTurn ? 'deck-active-glow' : ''}`}
+            className={`mobile-draw-deck ${isMyTurn ? 'deck-active' : ''} ${mustDraw ? 'deck-must-draw' : ''}`}
             onClick={handleDraw}
           >
             <div className="deck-shadow-3" />
@@ -171,9 +161,13 @@ export default function GamePage() {
               customStyle={{ cursor: isMyTurn ? 'pointer' : 'default' }}
             />
             {isMyTurn && (
-              <div className="mobile-draw-badge animate-pulse-glow">
-                <PlusCircle size={11} />
-                <span>{gameState.stackedDrawCount > 0 ? `จั่ว +${gameState.stackedDrawCount}` : 'จั่วไพ่'}</span>
+              <div className={`mobile-draw-badge ${mustDraw ? 'badge-urgent-draw animate-bounce' : 'animate-pulse-glow'}`}>
+                {mustDraw ? <Sparkles size={12} /> : <PlusCircle size={11} />}
+                <span>
+                  {gameState.stackedDrawCount > 0
+                    ? `จั่ว +${gameState.stackedDrawCount}`
+                    : (mustDraw ? 'กดจั่วไพ่' : 'จั่วไพ่')}
+                </span>
               </div>
             )}
             <div className="mobile-deck-count">
@@ -195,23 +189,20 @@ export default function GamePage() {
         </div>
       </div>
 
-      {/* 4. Floating Action Controls */}
+      {/* 4. Floating Action Controls (UNO & Hint) */}
       <div className="mobile-floating-actions">
-        <div className="my-emote-anchor">
-          {myEmote && (
-            <div className="my-floating-reaction animate-bounce-pop">
-              <div className="reaction-bubble">
-                <ReactionIcon id={myEmote.emoji} size={26} />
-              </div>
-              <div className="reaction-bubble-tail" />
-            </div>
+        <div className="hand-status-indicator">
+          {isMyTurn && mustDraw && (
+            <span className="must-draw-text-hint animate-fade-in">
+              ไม่มีไพ่ที่ลงได้ — กดที่กองจั่วไพ่
+            </span>
           )}
-          <EmoteWheel onSendEmote={sendEmote} />
         </div>
 
         <UnoButton
           onShoutUno={shoutUno}
           hasCalledUno={myUnoState.hasCalledUno}
+          canCall={canCallUno}
           isUrgent={isUrgentUno}
         />
       </div>

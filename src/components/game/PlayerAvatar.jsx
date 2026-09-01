@@ -1,7 +1,6 @@
-// src/components/game/PlayerAvatar.jsx - HORIYA Player Seat & Status (No Emojis)
 import React from 'react';
 import { AlertCircle, Bot, Crown, Layers } from 'lucide-react';
-import { AvatarIcon, ReactionIcon } from '../../utils/IconRenderer';
+import { AvatarIcon } from '../../utils/IconRenderer';
 
 export default function PlayerAvatar({
   player,
@@ -12,8 +11,7 @@ export default function PlayerAvatar({
   hasCalledUno = false,
   mustCallUno = false,
   onCalloutUno,
-  isSelf = false,
-  floatingEmote = null
+  isSelf = false
 }) {
   if (!player) return null;
 
@@ -24,12 +22,6 @@ export default function PlayerAvatar({
 
   return (
     <div className={`player-seat ${isCurrentTurn ? 'seat-active-turn' : ''} ${isSelf ? 'seat-self' : ''}`}>
-      {/* Floating Reaction */}
-      {floatingEmote && (
-        <div className="avatar-floating-emote animate-bounce-pop">
-          <ReactionIcon id={floatingEmote.emoji} size={20} />
-        </div>
-      )}
 
       {/* UNO Shout Tag */}
       {hasCalledUno && (
