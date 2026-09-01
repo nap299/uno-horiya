@@ -1,4 +1,4 @@
-// src/pages/GamePage.jsx - HORIYA Mobile-First Arena (Clean UX, Prominent Draw & Smart UNO)
+// src/pages/GamePage.jsx - HORIYA 5-Player Mobile Arena with Circular Vortex Table
 import React, { useState } from 'react';
 import { useGameSocket } from '../context/GameSocketContext';
 import { useAuth } from '../context/AuthContext';
@@ -11,7 +11,7 @@ import GameOverModal from '../components/game/GameOverModal';
 import SpellEffect from '../components/effects/SpellEffect';
 import { ELEMENT_THEMES } from '../models/cardThemes';
 import { canPlayCard } from '../../server/gameEngine';
-import { ShieldAlert, Layers, PlusCircle } from 'lucide-react';
+import { ShieldAlert, Layers, PlusCircle, RotateCw } from 'lucide-react';
 
 export default function GamePage() {
   const { user } = useAuth();
@@ -54,7 +54,7 @@ export default function GamePage() {
   const canCallUno = !myUnoState.hasCalledUno && (myHand.length <= 2 || myUnoState.mustCallUno);
   const isUrgentUno = myHand.length <= 2 && !myUnoState.hasCalledUno;
 
-  // เรียงคู่ต่อสู้ให้ขึ้นอยู่กับตำแหน่งของตัวเอง
+  // เรียงคู่ต่อสู้ให้ขึ้นอยู่กับตำแหน่งของตัวเอง (สูงสุด 4 คนรอบโต๊ะ)
   const reorderedOpponents = [];
   if (myIndex !== -1) {
     for (let i = 1; i < players.length; i++) {
@@ -112,31 +112,42 @@ export default function GamePage() {
         </div>
       </div>
 
-      {/* 2. Opponents Top Bar */}
-      <div className="mobile-opponents-bar">
-        {reorderedOpponents.map((opp) => {
+      {/* 2. Opponents 5-Player Circular Arc Layout */}
+      <div className={`mobile-opponents-arc opponents-count-${reorderedOpponents.length}`}>
+        {reorderedOpponents.map((opp, index) => {
           const oppCardData = gameState.playerCardCounts?.[opp.id] || { count: 7, hasCalledUno: false, mustCallUno: false };
           const isOppTurn = currentPlayer?.id === opp.id;
 
           return (
-            <PlayerAvatar
-              key={opp.id}
-              player={opp}
-              cardCount={oppCardData.count}
-              isCurrentTurn={isOppTurn}
-              timeRemaining={timeRemaining}
-              maxTime={room.rules.turnTimer || 20}
-              hasCalledUno={oppCardData.hasCalledUno}
-              mustCallUno={oppCardData.mustCallUno}
-              onCalloutUno={(targetId) => calloutUno(targetId)}
-            />
+            <div key={opp.id} className={`opponent-slot slot-pos-${index + 1}`}>
+              <PlayerAvatar
+                player={opp}
+                cardCount={oppCardData.count}
+                isCurrentTurn={isOppTurn}
+                timeRemaining={timeRemaining}
+                maxTime={room.rules.turnTimer || 20}
+                hasCalledUno={oppCardData.hasCalledUno}
+                mustCallUno={oppCardData.mustCallUno}
+                onCalloutUno={(targetId) => calloutUno(targetId)}
+              />
+            </div>
           );
         })}
       </div>
 
-      {/* 3. Center Arena Table */}
+      {/* 3. Center Circular Table Arena */}
       <div className="mobile-center-table">
-        <div className="mobile-summoning-circle" style={{ borderColor: theme.primary }} />
+        {/* Golden Ring with Direction Arrows */}
+        <div className="mobile-summoning-circle">
+          <div className={`arena-direction-arrows ${gameState.direction === 1 ? 'dir-clockwise' : 'dir-counter'}`}>
+            <div className="arrow-curved arrow-top-right">
+              <RotateCw size={22} />
+            </div>
+            <div className="arrow-curved arrow-bottom-left">
+              <RotateCw size={22} />
+            </div>
+          </div>
+        </div>
 
         {/* Stacked Draw Penalty Alert */}
         {gameState.stackedDrawCount > 0 && (
@@ -147,7 +158,7 @@ export default function GamePage() {
         )}
 
         <div className="mobile-table-piles">
-          {/* Draw Pile */}
+          {/* Draw Pile (Left) */}
           <div
             className={`mobile-draw-deck ${isMyTurn ? 'deck-active' : ''} ${mustDraw ? 'deck-must-draw' : ''}`}
             onClick={handleDraw}
@@ -176,7 +187,7 @@ export default function GamePage() {
             </div>
           </div>
 
-          {/* Discard Pile */}
+          {/* Discard Pile (Center) */}
           <div className="mobile-discard-pile">
             {topCard ? (
               <div className="mobile-top-card animate-card-drop">
@@ -207,7 +218,7 @@ export default function GamePage() {
         />
       </div>
 
-      {/* 5. Hand Fan */}
+      {/* 5. Hand Fan (Bottom Center) */}
       <HandFan
         hand={myHand}
         topCard={topCard}

@@ -39,7 +39,7 @@ export default function RoomPage() {
   const myPlayer = players.find(p => p.id === myId);
   const isReady = myPlayer?.isReady || isHost;
 
-  const maxPlayers = 8;
+  const maxPlayers = 5;
   const canStart = isHost && players.length >= 2 && players.every(p => p.isReady || p.isHost);
 
   const handleCopyLink = () => {

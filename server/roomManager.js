@@ -63,7 +63,7 @@ export class RoomManager {
     const room = this.getRoom(roomCode);
     if (!room) return { error: 'Room not found in the realm.' };
     if (room.status !== 'LOBBY') return { error: 'Duel already in progress!' };
-    if (room.players.length >= 8) return { error: 'Room has reached maximum capacity (8 players).' };
+    if (room.players.length >= 5) return { error: 'ห้องเต็มแล้ว (รองรับสูงสุด 5 คน)' };
 
     const existingIndex = room.players.findIndex(p => p.id === player.id);
     if (existingIndex !== -1) {
@@ -87,7 +87,7 @@ export class RoomManager {
   addBot(roomCode) {
     const room = this.getRoom(roomCode);
     if (!room || room.status !== 'LOBBY') return null;
-    if (room.players.length >= 8) return null;
+    if (room.players.length >= 5) return null;
 
     const botConfig = BOT_AVATARS[room.players.length % BOT_AVATARS.length];
     const botId = `bot_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`;
