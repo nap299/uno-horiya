@@ -60,11 +60,12 @@ html, body, #root {
 }
 
 body {
-  background-color: #090C13;
-  background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 32px 32px;
+  background-color: #070B14;
+  background-image: url('./bg.jpeg'), url('/bg.jpeg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  background-attachment: fixed;
   overscroll-behavior-y: none;
 }
 
@@ -87,6 +88,11 @@ body {
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
+  background-image: url('./bg.jpeg'), url('/bg.jpeg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  background-attachment: fixed;
 }
 
 .global-app-header {

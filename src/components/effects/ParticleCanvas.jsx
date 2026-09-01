@@ -43,11 +43,7 @@ export default function ParticleCanvas({ activeColor = 'ruby' }) {
     const render = () => {
       ctx.clearRect(0, 0, width, height);
 
-      // Clean, solid dark gaming backdrop with subtle ambient depth
-      ctx.fillStyle = '#090C13';
-      ctx.fillRect(0, 0, width, height);
-
-      // Render subtle, crisp ambient floating motes
+      // Render subtle, crisp ambient floating motes on top of transparent background
       particles.forEach((p) => {
         p.x += p.speedX * 0.5;
         p.y += p.speedY * 0.5;
