@@ -2356,24 +2356,65 @@ body {
 
 .room-bottom-actions {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
   width: 100%;
-  margin-top: 6px;
+  margin-top: 4px;
 }
 
-.btn-leave-chamber,
-.btn-start-game,
-.btn-toggle-ready {
-  width: 100%;
-  min-height: 44px;
+.btn-leave-chamber {
+  flex: 1;
+  min-height: 46px;
   font-size: 0.92rem;
   font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   border-radius: 12px;
+  white-space: nowrap;
+}
+
+.btn-start-game,
+.btn-toggle-ready {
+  flex: 2.2;
+  min-height: 46px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+.btn-start-game.start-ready {
+  background: #00E676 !important;
+  color: #061A10 !important;
+  border-color: #A7F3D0 !important;
+  box-shadow: 0 4px 0 #059669, 0 0 16px rgba(0, 230, 118, 0.4) !important;
+  cursor: pointer !important;
+  opacity: 1 !important;
+}
+
+.btn-start-game.start-ready:hover {
+  transform: translateY(-2px);
+}
+
+.btn-start-game.start-ready:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #059669 !important;
+}
+
+.btn-start-game.start-disabled {
+  background: rgba(45, 20, 30, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #94A3B8 !important;
+  opacity: 0.55 !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
 }
 
 .pedestal-clickable {

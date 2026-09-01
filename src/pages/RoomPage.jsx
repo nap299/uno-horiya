@@ -40,7 +40,7 @@ export default function RoomPage() {
   const isReady = myPlayer?.isReady || isHost;
 
   const maxPlayers = 5;
-  const canStart = isHost && players.length >= 2 && players.every(p => p.isReady || p.isHost);
+  const canStart = isHost && players.length >= 2;
 
   const handleCopyLink = () => {
     sound.playCard('sapphire');
@@ -189,22 +189,21 @@ export default function RoomPage() {
         })}
       </div>
 
-      {/* Bottom Actions Bar (1 Button Per Line) */}
+      {/* Bottom Actions Bar (Side by Side in 1 Row) */}
       <div className="room-bottom-actions">
+        <button className="btn-secondary-action btn-leave-chamber" onClick={leaveRoom}>
+          <LogOut size={16} />
+          <span>ออก</span>
+        </button>
+
         {isHost ? (
           <button
-            className="btn-primary-action btn-start-game"
+            className={`btn-primary-action btn-start-game ${canStart ? 'start-ready animate-pulse-glow' : 'start-disabled'}`}
             onClick={handleStartGame}
             disabled={!canStart || isStarting}
           >
             <Play size={16} />
-            <span>
-              {players.length < 2
-                ? 'ต้องการผู้เล่นอย่างน้อย 2 คน'
-                : isStarting
-                ? 'กำลังเริ่มเกม...'
-                : 'เริ่มเกมทันที'}
-            </span>
+            <span>{isStarting ? 'กำลังเริ่ม...' : 'เริ่มเกม'}</span>
           </button>
         ) : (
           <button
@@ -212,14 +211,9 @@ export default function RoomPage() {
             onClick={toggleReady}
           >
             <Check size={16} />
-            <span>{isReady ? 'พร้อมแล้ว (แตะเพื่อยกเลิก)' : 'กดพร้อมเล่น'}</span>
+            <span>{isReady ? 'พร้อมแล้ว' : 'พร้อม'}</span>
           </button>
         )}
-
-        <button className="btn-secondary-action btn-leave-chamber" onClick={leaveRoom}>
-          <LogOut size={16} />
-          <span>ออกจากห้อง</span>
-        </button>
       </div>
     </div>
   );
