@@ -91,19 +91,14 @@ export default function LobbyPage({ onOpenProfile, onOpenRules }) {
         </div>
       )}
 
-      {/* 1. Hero Brand Bar (Solid & Punchy) */}
+      {/* 1. Hero Brand Bar */}
       <section className="lobby-brand-hero">
-        <div className="brand-mark-group">
-          <div className="brand-card-stack">
-            <span className="card-glyph card-glyph-yellow">7</span>
-            <span className="card-glyph card-glyph-blue">U</span>
-            <span className="card-glyph card-glyph-red">9</span>
-          </div>
-          <div className="brand-title-wrap">
-            <h1 className="brand-title-text">HORIYA</h1>
-            <span className="brand-badge-tag">ONLINE ARENA</span>
-          </div>
-        </div>
+        <img
+          src="./logo1.png"
+          alt="HORIYA"
+          className="lobby-brand-logo-img"
+          onError={(e) => { e.target.src = '/logo1.png'; }}
+        />
       </section>
 
       {/* 2. Duelist Profile Summary (Solid Slate Card) */}
