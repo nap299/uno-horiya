@@ -203,12 +203,16 @@ export default function LobbyPage({ onOpenProfile, onOpenRules }) {
           </div>
 
           <button
-            className="btn-solid-primary"
+            className="btn-image-action"
             onClick={handleQuickPlay}
             disabled={isSubmitting}
           >
-            <Play size={18} />
-            <span>{isSubmitting ? 'กำลังสร้างห้อง...' : 'สร้างห้องเล่นทันที'}</span>
+            <img
+              src="./create_room.png"
+              alt="สร้างห้องเล่นทันที"
+              className="create-room-btn-img"
+              onError={(e) => { e.target.src = '/create_room.png'; }}
+            />
           </button>
         </div>
 

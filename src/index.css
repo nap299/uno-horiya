@@ -759,6 +759,48 @@ body {
   cursor: not-allowed;
 }
 
+/* Image Action Button (e.g. create_room.png) */
+.btn-image-action {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.12s ease, filter 0.15s ease;
+  outline: none;
+  margin-top: 4px;
+}
+
+.btn-image-action:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.01);
+  filter: brightness(1.06);
+}
+
+.btn-image-action:active:not(:disabled) {
+  transform: translateY(2px) scale(0.98);
+  filter: brightness(0.95);
+}
+
+.btn-image-action:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  filter: grayscale(40%);
+}
+
+.create-room-btn-img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 12px;
+  display: block;
+  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.45));
+}
+
 .btn-solid-secondary {
   display: flex;
   align-items: center;
