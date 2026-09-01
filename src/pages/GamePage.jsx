@@ -11,7 +11,7 @@ import GameOverModal from '../components/game/GameOverModal';
 import SpellEffect from '../components/effects/SpellEffect';
 import { ELEMENT_THEMES } from '../models/cardThemes';
 import { canPlayCard } from '../../server/gameEngine';
-import { ShieldAlert, Layers, PlusCircle, Sparkles } from 'lucide-react';
+import { ShieldAlert, Layers, PlusCircle } from 'lucide-react';
 
 export default function GamePage() {
   const { user } = useAuth();
@@ -162,7 +162,7 @@ export default function GamePage() {
             />
             {isMyTurn && (
               <div className={`mobile-draw-badge ${mustDraw ? 'badge-urgent-draw animate-bounce' : 'animate-pulse-glow'}`}>
-                {mustDraw ? <Sparkles size={12} /> : <PlusCircle size={11} />}
+                <PlusCircle size={12} />
                 <span>
                   {gameState.stackedDrawCount > 0
                     ? `จั่ว +${gameState.stackedDrawCount}`
