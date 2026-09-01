@@ -56,15 +56,15 @@ export default function HandFan({
   }, [selectedCardId]);
 
   // Calculate dynamic overlap so ALL cards fit within 100% of the screen width
-  const baseCardWidth = containerWidth < 480 ? 64 : 80;
-  const availableWidth = Math.max(280, containerWidth - 20);
+  const baseCardWidth = containerWidth < 480 ? 58 : 72;
+  const availableWidth = Math.max(260, containerWidth - 24);
 
   let marginOverlap = 0;
   if (cardCount > 1) {
     const totalWidthUnshifted = cardCount * baseCardWidth;
     if (totalWidthUnshifted > availableWidth) {
       marginOverlap = (availableWidth - totalWidthUnshifted) / (cardCount - 1);
-      const maxNegative = -(baseCardWidth - 18);
+      const maxNegative = -(baseCardWidth - 14);
       if (marginOverlap < maxNegative) {
         marginOverlap = maxNegative;
       }
