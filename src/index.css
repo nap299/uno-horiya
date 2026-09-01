@@ -792,13 +792,13 @@ body {
 }
 
 .create-room-btn-img {
-  width: 100%;
-  max-width: 100%;
-  height: auto;
+  width: auto;
+  max-width: 250px;
+  max-height: 56px;
   object-fit: contain;
-  border-radius: 12px;
+  border-radius: 10px;
   display: block;
-  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.45));
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
 }
 
 .btn-solid-secondary {
