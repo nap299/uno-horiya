@@ -624,6 +624,14 @@ body {
   flex-shrink: 0;
   color: #FFFFFF;
   box-shadow: 0 3px 0 rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.quick-play-icon-img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
 }
 
 .mode-icon-square svg {

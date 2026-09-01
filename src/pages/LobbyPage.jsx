@@ -176,7 +176,12 @@ export default function LobbyPage({ onOpenProfile, onOpenRules }) {
         <div className="mode-card mode-quick-play">
           <div className="mode-card-header">
             <div className="mode-icon-square icon-square-red">
-              <Swords size={24} />
+              <img
+                src="./quick_play.png"
+                alt="Quick Play"
+                className="quick-play-icon-img"
+                onError={(e) => { e.target.src = '/quick_play.png'; }}
+              />
             </div>
             <div className="mode-header-text">
               <div className="mode-tag-pill tag-pill-hot">
