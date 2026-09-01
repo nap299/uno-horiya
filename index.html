@@ -1,0 +1,390 @@
+<!doctype html>
+
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <!-- =========================================================
+       HORIYA / UNO — APP SHELL
+       Premium Game Frontend Foundation
+       ========================================================= -->
+
+  <!-- Brand / Favicon — card-stack mark -->
+
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cdefs%3E%3ClinearGradient id='gy' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ffd600'/%3E%3Cstop offset='1' stop-color='%23ff9f00'/%3E%3C/linearGradient%3E%3ClinearGradient id='gb' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23168cff'/%3E%3Cstop offset='1' stop-color='%230057c7'/%3E%3C/linearGradient%3E%3ClinearGradient id='gr' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff1744'/%3E%3Cstop offset='1' stop-color='%23b40027'/%3E%3C/linearGradient%3E%3Cfilter id='s'%3E%3CfeDropShadow dx='0' dy='3' stdDeviation='4' flood-color='%23000000' flood-opacity='.5'/%3E%3C/filter%3E%3C/defs%3E%3Crect width='128' height='128' rx='28' fill='%23070a12'/%3E%3Cg filter='url(%23s)'%3E%3Crect x='27' y='30' width='40' height='58' rx='7' transform='rotate(-16 47 59)' fill='url(%23gy)' stroke='%23fff' stroke-width='3'/%3E%3Crect x='44' y='34' width='40' height='58' rx='7' fill='url(%23gb)' stroke='%23fff' stroke-width='3'/%3E%3Crect x='61' y='30' width='40' height='58' rx='7' transform='rotate(16 81 59)' fill='url(%23gr)' stroke='%23fff' stroke-width='3'/%3E%3C/g%3E%3C/svg%3E" />
+
+  <!-- Mobile / PWA -->
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#070a12" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="HORIYA" />
+
+  <!-- SEO -->
+
+  <title>HORIYA</title>
+  <meta name="description" content="HORIYA — เกมการ์ด UNO ออนไลน์ เล่นกับเพื่อนและบอท AI แบบเรียลไทม์" />
+  <meta name="keywords" content="HORIYA, UNO, UNO Online, card game, multiplayer, online game" />
+  <meta name="application-name" content="HORIYA" />
+
+  <!-- Open Graph -->
+
+  <meta property="og:title" content="HORIYA — UNO Online" />
+  <meta property="og:description" content="เกมการ์ด UNO ออนไลน์ เล่นกับเพื่อนและบอท AI แบบเรียลไทม์" />
+  <meta property="og:type" content="website" />
+
+  <!-- =========================================================
+       PERFORMANCE
+       ========================================================= -->
+
+  <!-- Google Fonts -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Mitr:wght@200;300;400;500&family=Outfit:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+
+  <!-- Google Identity Services -->
+
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <!-- Vite Source Entrypoint -->
+  <script type="module" src="/src/main.jsx"></script>
+
+  <!-- =========================================================
+       BOOT SPLASH — inline, zero external deps
+       Shows instantly on load, fades out the moment React
+       mounts content into #root. Purely presentational;
+       does not touch or depend on the app bundle.
+       ========================================================= -->
+  <style>
+    #boot-splash {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      background:
+        radial-gradient(circle at 50% 30%, rgba(255, 23, 68, 0.16), transparent 60%),
+        radial-gradient(circle at 20% 80%, rgba(22, 140, 255, 0.14), transparent 55%),
+        radial-gradient(circle at 80% 78%, rgba(255, 214, 0, 0.10), transparent 55%),
+        #05070d;
+      font-family: "Prompt", "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow: hidden;
+      transition: opacity .55s ease, visibility .55s ease;
+    }
+
+    #boot-splash.is-hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    #boot-splash::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: radial-gradient(circle at 50% 40%, #000 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .boot-cards {
+      position: relative;
+      width: 200px;
+      height: 150px;
+      filter: drop-shadow(0 18px 34px rgba(0, 0, 0, 0.55));
+    }
+
+    .boot-card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 92px;
+      height: 132px;
+      border-radius: 14px;
+      border: 3px solid rgba(255, 255, 255, 0.92);
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25) inset, 0 10px 24px rgba(0, 0, 0, 0.45);
+      opacity: 0;
+      animation: boot-card-in 1.05s cubic-bezier(.2, .9, .25, 1) forwards, boot-card-float 3.2s ease-in-out .9s infinite;
+    }
+
+    .boot-card::after {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border: 2px solid rgba(255, 255, 255, 0.55);
+      border-radius: 9px;
+    }
+
+    .boot-card::before {
+      content: attr(data-glyph);
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Outfit", sans-serif;
+      font-weight: 900;
+      font-style: italic;
+      font-size: 34px;
+      color: #fff;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    }
+
+    .boot-card--yellow {
+      background: linear-gradient(150deg, #ffd600, #ff9f00);
+      transform: translate(-50%, -50%) rotate(-16deg) translateY(6px);
+      animation-delay: 0s, 0s;
+      z-index: 1;
+    }
+
+    .boot-card--blue {
+      background: linear-gradient(150deg, #168cff, #0057c7);
+      transform: translate(-50%, -50%) translateY(-6px);
+      animation-delay: .14s, .15s;
+      z-index: 2;
+    }
+
+    .boot-card--red {
+      background: linear-gradient(150deg, #ff1744, #b40027);
+      transform: translate(-50%, -50%) rotate(16deg) translateY(6px);
+      animation-delay: .28s, .3s;
+      z-index: 1;
+    }
+
+    @keyframes boot-card-in {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, 30%) scale(.6) rotate(0deg);
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    .boot-card--yellow {
+      animation-name: boot-card-in-yellow, boot-card-float;
+    }
+
+    @keyframes boot-card-in-yellow {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, 20%) scale(.6) rotate(-16deg);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) rotate(-16deg) translateY(6px);
+      }
+    }
+
+    .boot-card--blue {
+      animation-name: boot-card-in-blue, boot-card-float;
+    }
+
+    @keyframes boot-card-in-blue {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, 20%) scale(.6) rotate(0deg);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) translateY(-6px);
+      }
+    }
+
+    .boot-card--red {
+      animation-name: boot-card-in-red, boot-card-float;
+    }
+
+    @keyframes boot-card-in-red {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, 20%) scale(.6) rotate(16deg);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) rotate(16deg) translateY(6px);
+      }
+    }
+
+    @keyframes boot-card-float {
+
+      0%,
+      100% {
+        filter: brightness(1);
+      }
+
+      50% {
+        filter: brightness(1.08);
+      }
+    }
+
+    .boot-wordmark {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      opacity: 0;
+      animation: boot-fade-up .7s ease .55s forwards;
+    }
+
+    .boot-title {
+      margin: 0;
+      font-family: "Outfit", sans-serif;
+      font-weight: 900;
+      font-style: italic;
+      font-size: clamp(34px, 8vw, 52px);
+      letter-spacing: .04em;
+      line-height: 1;
+      background: linear-gradient(90deg, #ff1744 0%, #ffd600 45%, #168cff 75%, #19d56b 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 34px rgba(255, 23, 68, 0.25);
+    }
+
+    .boot-subtitle {
+      margin: 0;
+      font-size: 13px;
+      letter-spacing: .32em;
+      text-transform: uppercase;
+      color: #9aa7bb;
+      font-weight: 500;
+    }
+
+    @keyframes boot-fade-up {
+      0% {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .boot-loader {
+      width: 168px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.10);
+      overflow: hidden;
+      opacity: 0;
+      animation: boot-fade-up .7s ease .75s forwards;
+    }
+
+    .boot-loader::after {
+      content: "";
+      display: block;
+      height: 100%;
+      width: 40%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #ff1744, #ffd600, #168cff);
+      animation: boot-loader-sweep 1.3s ease-in-out infinite;
+    }
+
+    @keyframes boot-loader-sweep {
+      0% {
+        transform: translateX(-120%);
+      }
+
+      100% {
+        transform: translateX(340%);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #boot-splash *, #boot-splash *::before, #boot-splash *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!--
+    React application mount point.
+    All existing game UI is rendered here.
+  -->
+  <div id="root"></div>
+
+  <!--
+    No inline game logic.
+    The existing React bundle remains responsible for:
+    - Lobby
+    - Room
+    - Game Arena
+    - Profile
+    - Rules
+    - UNO interactions
+    - Multiplayer connection
+  -->
+
+  <!-- Boot splash: presentational only, self-removing -->
+  <div id="boot-splash" aria-hidden="true">
+    <div class="boot-cards">
+      <div class="boot-card boot-card--yellow" data-glyph="7"></div>
+      <div class="boot-card boot-card--blue" data-glyph="U"></div>
+      <div class="boot-card boot-card--red" data-glyph="9"></div>
+    </div>
+    <div class="boot-wordmark">
+      <p class="boot-title">HORIYA</p>
+      <p class="boot-subtitle">UNO ONLINE</p>
+    </div>
+    <div class="boot-loader"></div>
+  </div>
+
+  <script>
+    (function () {
+      var splash = document.getElementById("boot-splash");
+      var root = document.getElementById("root");
+      if (!splash || !root) return;
+
+      var removed = false;
+      function hideSplash() {
+        if (removed) return;
+        removed = true;
+        splash.classList.add("is-hidden");
+        window.setTimeout(function () {
+          if (splash.parentNode) splash.parentNode.removeChild(splash);
+        }, 600);
+      }
+
+      // Hide the instant React renders real content into #root.
+      var observer = new MutationObserver(function () {
+        if (root.childElementCount > 0) {
+          observer.disconnect();
+          hideSplash();
+        }
+      });
+      observer.observe(root, { childList: true, subtree: false });
+
+      // Safety net in case the app mounts before the observer
+      // attaches, or something goes wrong: never block the app.
+      window.setTimeout(hideSplash, 6000);
+    })();
+  </script>
+
+</body>
+
+</html>
