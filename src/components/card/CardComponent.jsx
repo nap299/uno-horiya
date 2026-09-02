@@ -1,6 +1,87 @@
-// src/components/card/CardComponent.jsx - HORIYA Modern Solid Tactical Card
+// src/components/card/CardComponent.jsx - HORIYA Custom Template Card Component
 import React, { useState, useRef } from 'react';
 import { ELEMENT_THEMES, ACTION_SPELL_INFO } from '../../models/cardThemes';
+
+// Map each card type/color to its custom template image
+export function getCardTemplate(card, isBack = false) {
+  if (isBack) {
+    return {
+      image: './cardtemplate/cardback.png',
+      fallback: '/cardtemplate/cardback.png',
+      showCorners: false,
+      symbol: ''
+    };
+  }
+
+  if (!card) {
+    return {
+      image: './cardtemplate/cardback.png',
+      fallback: '/cardtemplate/cardback.png',
+      showCorners: false,
+      symbol: ''
+    };
+  }
+
+  // 1. Wild Draw 4 (+4)
+  if (card.type === 'wild_draw4') {
+    return {
+      image: './cardtemplate/four.png',
+      fallback: '/cardtemplate/four.png',
+      showCorners: true,
+      symbol: '+4'
+    };
+  }
+
+  // 2. Wild Color Change (No number)
+  if (card.type === 'wild') {
+    return {
+      image: './cardtemplate/color.png',
+      fallback: '/cardtemplate/color.png',
+      showCorners: false,
+      symbol: ''
+    };
+  }
+
+  // 3. Reverse (Swift - No number)
+  if (card.type === 'reverse') {
+    return {
+      image: './cardtemplate/swift.png',
+      fallback: '/cardtemplate/swift.png',
+      showCorners: false,
+      symbol: ''
+    };
+  }
+
+  // 4. Colored Cards: red, green, blue, yellow
+  let imageFile = 'red.png';
+  const colorStr = (card.color || '').toLowerCase();
+  if (colorStr === 'emerald' || colorStr === 'green') {
+    imageFile = 'green.png';
+  } else if (colorStr === 'sapphire' || colorStr === 'blue') {
+    imageFile = 'blue.png';
+  } else if (colorStr === 'amber' || colorStr === 'yellow') {
+    imageFile = 'yellow.png';
+  } else {
+    imageFile = 'red.png';
+  }
+
+  // Corner symbol calculation
+  let symbol = '';
+  if (card.type === 'number') {
+    symbol = card.value != null ? card.value : '';
+  } else if (card.type === 'draw2') {
+    symbol = '+2';
+  } else if (card.type === 'skip') {
+    symbol = '⊘';
+  }
+
+  return {
+    image: `./cardtemplate/${imageFile}`,
+    fallback: `/cardtemplate/${imageFile}`,
+    showCorners: true,
+    symbol: symbol
+  };
+}
 
 export default function CardComponent({
   card,
@@ -17,31 +98,9 @@ export default function CardComponent({
 
   if (!card && !isBack) return null;
 
-  // 1. Solid Card Back Design (3-Card Stack Logo + Clean Brand)
-  if (isBack) {
-    return (
-      <div
-        className={`fantasy-card card-back card-size-${size}`}
-        style={customStyle}
-      >
-        <div className="card-back-pattern">
-          <div className="card-back-brand-group">
-            <div className="card-back-stack-mini">
-              <span className="cb-mini cb-yellow" />
-              <span className="cb-mini cb-blue" />
-              <span className="cb-mini cb-red" />
-            </div>
-            <span className="card-back-title">HORIYA</span>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  const isWild = card.type === 'wild' || card.type === 'wild_draw4';
-  const isSpecial = card.type !== 'number';
-  const theme = ELEMENT_THEMES[card.color] || ELEMENT_THEMES.celestial;
-  const spellInfo = ACTION_SPELL_INFO[card.type];
+  const template = getCardTemplate(card, isBack);
+  const theme = card ? (ELEMENT_THEMES[card.color] || ELEMENT_THEMES.celestial) : null;
+  const spellInfo = card ? ACTION_SPELL_INFO[card.type] : null;
 
   const handleMouseMove = (e) => {
     if (disabled || size === 'mini' || size === 'sm') return;
@@ -63,82 +122,43 @@ export default function CardComponent({
     setTilt({ x: 0, y: 0 });
   };
 
-  const cornerSymbol = card.type === 'number' ? card.value : spellInfo?.symbol;
-
   return (
     <div
       ref={cardRef}
-      className={`fantasy-card card-size-${size} card-color-${card.color} ${isSpecial ? 'card-special-action' : ''} ${isWild ? 'card-special-wild' : ''} ${isPlayable ? 'is-playable' : ''} ${disabled ? 'is-disabled' : ''}`}
+      className={`fantasy-card card-size-${size} ${isBack ? 'card-is-back' : ''} ${isPlayable ? 'is-playable' : ''} ${disabled ? 'is-disabled' : ''}`}
       style={{
-        '--card-bg-color': isWild ? '#0E131E' : theme.primary,
-        '--card-border-color': isWild ? '#F59E0B' : theme.border,
         transform: `perspective(600px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) ${customStyle.transform || ''}`,
         ...customStyle
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       onClick={!disabled && isPlayable && onClick ? onClick : undefined}
-      title={spellInfo ? `${spellInfo.name}` : `${theme.name} ${card.value}`}
+      title={spellInfo ? `${spellInfo.name}` : card ? `${theme?.name || ''} ${card.value ?? ''}` : 'HORIYA'}
     >
-      <div className="card-inner-frame">
-        {/* Top-Left Corner */}
-        <div className="card-corner top-left">
-          <span className="corner-value">{cornerSymbol}</span>
-        </div>
+      {/* Template Image Background */}
+      <img
+        src={template.image}
+        alt={card ? `${card.color} ${card.value || card.type}` : 'Card Back'}
+        className="card-template-img"
+        onError={(e) => {
+          if (template.fallback && e.target.src !== template.fallback) {
+            e.target.src = template.fallback;
+          }
+        }}
+        draggable={false}
+      />
 
-        {/* Center Artwork (Single Clean High-Impact Icon/Symbol) */}
-        <div className={`card-center-oval ${isSpecial ? 'oval-special' : ''} ${isWild ? 'oval-wild' : ''}`}>
-          {card.type === 'number' && (
-            <span className="center-number-text">{card.value}</span>
-          )}
-
-          {card.type === 'draw2' && (
-            <span className="center-action-text text-draw2">+2</span>
-          )}
-
-          {card.type === 'skip' && (
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="center-action-svg">
-              <circle cx="12" cy="12" r="10" />
-              <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
-            </svg>
-          )}
-
-          {card.type === 'reverse' && (
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" className="center-action-svg">
-              <path d="M4 8l4-4 4 4" />
-              <path d="M8 4v8c0 4.4 3.6 8 8 8h4" />
-              <path d="M20 16l-4 4-4-4" />
-              <path d="M16 20v-8c0-4.4-3.6-8-8-8H4" />
-            </svg>
-          )}
-
-          {card.type === 'wild' && (
-            <div className="center-wild-quadrant">
-              <span className="quad quad-red" />
-              <span className="quad quad-blue" />
-              <span className="quad quad-yellow" />
-              <span className="quad quad-green" />
-            </div>
-          )}
-
-          {card.type === 'wild_draw4' && (
-            <div className="center-wild4-container">
-              <div className="wild4-mini-quads">
-                <span className="w4-dot quad-red" />
-                <span className="w4-dot quad-blue" />
-                <span className="w4-dot quad-yellow" />
-                <span className="w4-dot quad-green" />
-              </div>
-              <span className="center-action-text text-draw4">+4</span>
-            </div>
-          )}
-        </div>
-
-        {/* Bottom-Right Corner (Inverted) */}
-        <div className="card-corner bottom-right">
-          <span className="corner-value">{cornerSymbol}</span>
-        </div>
-      </div>
+      {/* Top-Left & Bottom-Right Corner Symbols */}
+      {template.showCorners && template.symbol && (
+        <>
+          <div className="card-corner corner-top-left">
+            <span className="corner-symbol-text">{template.symbol}</span>
+          </div>
+          <div className="card-corner corner-bottom-right">
+            <span className="corner-symbol-text">{template.symbol}</span>
+          </div>
+        </>
+      )}
     </div>
   );
 }

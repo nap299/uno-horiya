@@ -1017,52 +1017,59 @@ body {
 }
 
 /* =========================================================
-   Modern Solid Tactical UNO Cards & Card Deck
+   HORIYA Custom Card Model & Template System
    ========================================================= */
 
 .fantasy-card {
   position: relative;
   width: 68px;
-  height: 102px;
+  height: 104px;
   border-radius: 9px;
-  background: var(--card-bg-color, #121622);
-  border: 2px solid #FFFFFF;
+  background: #0B0E17;
+  border: none;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.65);
   transform-style: preserve-3d;
   cursor: default;
   overflow: hidden;
   flex-shrink: 0;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .card-size-sm {
   width: 56px;
-  height: 84px;
+  height: 86px;
   border-radius: 7px;
 }
 
 .card-size-md {
   width: 68px;
-  height: 102px;
+  height: 104px;
+  border-radius: 9px;
 }
 
 .card-size-lg {
   width: 90px;
-  height: 135px;
+  height: 138px;
   border-radius: 12px;
 }
 
-/* Solid Vibrant Card Colors */
-.card-color-ruby { background: #D90429 !important; border-color: #FFFFFF; }
-.card-color-sapphire { background: #0077B6 !important; border-color: #FFFFFF; }
-.card-color-emerald { background: #0F8A5F !important; border-color: #FFFFFF; }
-.card-color-amber { background: #D97706 !important; border-color: #FFFFFF; }
-.card-color-celestial { background: #7B2CBF !important; border-color: #FFFFFF; }
+.card-template-img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  display: block;
+  pointer-events: none;
+  border-radius: inherit;
+}
 
 .fantasy-card.is-playable {
   cursor: pointer;
-  box-shadow: 0 0 0 2px #FFFFFF, 0 8px 20px rgba(0, 0, 0, 0.85);
-  border-color: #FFFFFF !important;
+  box-shadow: 0 0 0 2.5px #FFFFFF, 0 8px 24px rgba(0, 0, 0, 0.9) !important;
+  filter: brightness(1.06);
 }
 
 .fantasy-card.is-playable:hover {
@@ -1070,155 +1077,76 @@ body {
 }
 
 .fantasy-card.is-disabled {
-  opacity: 0.75;
-  filter: grayscale(20%);
+  opacity: 0.65;
+  filter: brightness(0.65) saturate(0.6);
+  cursor: not-allowed;
 }
 
-.card-inner-frame {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 3px 5px;
-  overflow: hidden;
-}
-
-/* Card Corner Symbols */
+/* Corner Symbol Badges (Top-Left & Bottom-Right) */
 .card-corner {
+  position: absolute;
+  z-index: 5;
   display: flex;
   align-items: center;
-  z-index: 5;
+  justify-content: center;
+  pointer-events: none;
 }
 
-.card-corner.top-left {
-  align-self: flex-start;
+.corner-top-left {
+  top: 3px;
+  left: 5px;
 }
 
-.card-corner.bottom-right {
-  align-self: flex-end;
+.corner-bottom-right {
+  bottom: 3px;
+  right: 5px;
   transform: rotate(180deg);
 }
 
-.corner-value {
+.corner-symbol-text {
   font-family: var(--font-rune);
-  font-size: 0.82rem;
+  font-size: 0.95rem;
   font-weight: 900;
   font-style: italic;
   color: #FFFFFF;
   line-height: 1;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
-}
-
-/* Center Oval Feature */
-.card-center-oval {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(-22deg);
-  width: 44px;
-  height: 62px;
-  background: #FFFFFF;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25), 0 2px 6px rgba(0, 0, 0, 0.4);
-  z-index: 2;
-}
-
-.card-size-sm .card-center-oval {
-  width: 36px;
-  height: 50px;
-}
-
-.card-size-lg .card-center-oval {
-  width: 58px;
-  height: 82px;
-}
-
-.center-number-text,
-.center-action-text {
-  font-family: var(--font-rune);
-  font-size: 1.85rem;
-  font-weight: 900;
-  font-style: italic;
-  color: #0F1420;
-  transform: rotate(22deg);
-  line-height: 1;
+  text-shadow:
+    0 1px 2px #000000,
+    0 0 4px #000000,
+    -1px -1px 0 #000000,
+    1px -1px 0 #000000,
+    -1px 1px 0 #000000,
+    1px 1px 0 #000000;
   user-select: none;
 }
 
-.text-draw2 {
-  font-size: 1.65rem;
-  letter-spacing: -1px;
+.card-size-sm .corner-symbol-text {
+  font-size: 0.78rem;
 }
 
-.text-draw4 {
-  font-size: 1.85rem;
-  letter-spacing: -1px;
-  color: #FFFFFF;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+.card-size-sm .corner-top-left {
+  top: 2px;
+  left: 4px;
 }
 
-.center-action-svg {
-  color: #0F1420 !important;
-  stroke: #0F1420 !important;
-  transform: rotate(22deg);
-  display: block;
+.card-size-sm .corner-bottom-right {
+  bottom: 2px;
+  right: 4px;
 }
 
-/* Wild Card Special Styling */
-.card-special-wild {
-  background: #0C101A !important;
-  border-color: #F59E0B !important;
+.card-size-lg .corner-symbol-text {
+  font-size: 1.25rem;
 }
 
-.card-special-wild .card-center-oval {
-  background: #141A26;
-  border: 1.5px solid rgba(255, 255, 255, 0.25);
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+.card-size-lg .corner-top-left {
+  top: 5px;
+  left: 7px;
 }
 
-.center-wild-quadrant {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  overflow: hidden;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  transform: rotate(22deg);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-  border: 1.5px solid #FFFFFF;
+.card-size-lg .corner-bottom-right {
+  bottom: 5px;
+  right: 7px;
 }
-
-.center-wild4-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1px;
-}
-
-.wild4-mini-quads {
-  display: flex;
-  gap: 3px;
-  transform: rotate(22deg);
-  margin-bottom: 2px;
-}
-
-.w4-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  border: 1px solid #FFFFFF;
-}
-
-.quad-red { background: #D90429; }
-.quad-blue { background: #0077B6; }
-.quad-yellow { background: #FFD600; }
-.quad-green { background: #0F8A5F; }
 
 /* Solid Card Back */
 .card-back {
@@ -1982,21 +1910,22 @@ body {
 /* Compact Responsive Cards inside HandFan */
 .pro-fan-row .fantasy-card {
   width: 58px !important;
-  height: 88px !important;
-  border-radius: 9px !important;
+  height: 90px !important;
+  border-radius: 8px !important;
 }
 
-.pro-fan-row .card-center-oval {
-  width: 32px !important;
-  height: 48px !important;
+.pro-fan-row .corner-symbol-text {
+  font-size: 0.82rem !important;
 }
 
-.pro-fan-row .center-number-text {
-  font-size: 1.45rem !important;
+.pro-fan-row .corner-top-left {
+  top: 2px !important;
+  left: 4px !important;
 }
 
-.pro-fan-row .corner-value {
-  font-size: 0.72rem !important;
+.pro-fan-row .corner-bottom-right {
+  bottom: 2px !important;
+  right: 4px !important;
 }
 
 .pro-card-slot {
