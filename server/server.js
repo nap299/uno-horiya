@@ -149,6 +149,12 @@ io.on('connection', (socket) => {
     if (callback) callback(result);
   });
 
+  // Pass Turn (Keep drawn card)
+  socket.on('PASS_TURN', ({ roomCode }, callback) => {
+    const result = roomManager.passTurn(roomCode, socket.id);
+    if (callback) callback(result);
+  });
+
   // Shout UNO
   socket.on('SHOUT_UNO', ({ roomCode }) => {
     roomManager.shoutUno(roomCode, socket.id);

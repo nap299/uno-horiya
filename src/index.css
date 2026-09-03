@@ -3432,3 +3432,113 @@ input:checked + .slider:before {
     font-size: 2rem;
   }
 }
+
+/* =========================================================
+   DRAW & PLAY MODAL / PROMPT (UNO Official Draw & Play Rule)
+   ========================================================= */
+.drawn-play-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(7, 10, 18, 0.78);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.drawn-play-modal {
+  background: linear-gradient(180deg, #161F33 0%, #0D1322 100%);
+  border: 2px solid rgba(255, 215, 0, 0.6);
+  border-radius: 24px;
+  box-shadow: 0 0 35px rgba(255, 215, 0, 0.35), 0 20px 48px rgba(0, 0, 0, 0.9);
+  padding: 22px 24px;
+  max-width: 320px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  animation: scaleUp 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.drawn-play-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-rune);
+}
+
+.drawn-sparkle {
+  font-size: 1.3rem;
+  animation: bounce 1.5s infinite;
+}
+
+.drawn-title {
+  font-size: 1.12rem;
+  font-weight: 800;
+  color: #FFD700;
+  text-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
+  letter-spacing: 0.5px;
+}
+
+.drawn-card-stage {
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+  filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.4));
+  transform: scale(1.05);
+}
+
+.drawn-play-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.btn-drawn-play {
+  width: 100%;
+  padding: 12px 18px;
+  border-radius: 14px;
+  border: none;
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  color: #FFFFFF;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.45);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-drawn-play:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.65);
+}
+
+.btn-drawn-play:active {
+  transform: translateY(0);
+}
+
+.btn-drawn-pass {
+  width: 100%;
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  color: #94A3B8;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.btn-drawn-pass:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+}
