@@ -96,7 +96,6 @@ export default function GamePage() {
     activeSpell,
     playCard,
     drawCard,
-    passTurn,
     shoutUno,
     calloutUno,
     startGame,
@@ -291,37 +290,6 @@ export default function GamePage() {
           onPlayCard={handlePlayCard}
         />
       </div>
-
-      {/* 6. Drawn Playable Card Modal (Draw & Play Rule) */}
-      {isMyTurn && gameState.pendingDrawnCard && gameState.pendingDrawnCard.playerId === myId && (
-        <div className="drawn-play-overlay animate-fade-in">
-          <div className="drawn-play-modal">
-            <div className="drawn-play-header">
-              <span className="drawn-sparkle">✨</span>
-              <span className="drawn-title">จั่วได้การ์ดที่ลงได้!</span>
-            </div>
-            <div className="drawn-card-stage">
-              <CardComponent card={gameState.pendingDrawnCard.card} size="lg" showGlow={true} />
-            </div>
-            <div className="drawn-play-buttons">
-              <button
-                type="button"
-                className="btn-drawn-play"
-                onClick={() => handlePlayCard(gameState.pendingDrawnCard.card)}
-              >
-                ⚡ ลงการ์ดนี้ทันที
-              </button>
-              <button
-                type="button"
-                className="btn-drawn-pass"
-                onClick={passTurn}
-              >
-                เก็บไว้ในมือ (ผ่าน)
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {pendingWildCard && (
         <ColorPickerModal

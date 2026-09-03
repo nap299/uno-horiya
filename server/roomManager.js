@@ -261,12 +261,6 @@ export class RoomManager {
     const currentPlayer = room.gameState.players[room.gameState.currentTurnIndex];
     if (!currentPlayer) return;
 
-    // If waiting for decision on a playable drawn card, timeout means PASS (keep card):
-    if (room.gameState.pendingDrawnCard?.playerId === currentPlayer.id) {
-      this.passTurn(roomCode, currentPlayer.id);
-      return;
-    }
-
     room.gameState.actionLog.unshift({
       text: `${currentPlayer.name} ran out of time and drew a rune!`,
       timestamp: Date.now()
@@ -285,8 +279,6 @@ export class RoomManager {
     if (currentPlayer.id !== playerId) {
       return { error: "Not your turn!" };
     }
-
-    gameState.pendingDrawnCard = null;
 
     const playerHand = gameState.hands[playerId];
     const cardIds = Array.isArray(cardId) ? cardId : [cardId];
@@ -502,57 +494,6 @@ export class RoomManager {
       gameState.unoState[playerId].mustCallUno = false;
     }
 
-    // Check if the drawn card can be played immediately
-    const isPlayable = !forcePass && drawnCard && canPlayCard(
-      drawnCard,
-      gameState.topCard,
-      gameState.activeColor,
-      0,
-      gameState.rules
-    );
-
-    if (isPlayable) {
-      gameState.pendingDrawnCard = {
-        playerId,
-        card: drawnCard
-      };
-
-      gameState.actionLog.unshift({
-        text: `${currentPlayer.name} drew a playable card: ${drawnCard.name}!`,
-        timestamp: Date.now()
-      });
-
-      this.broadcastGameState(roomCode, {
-        drawnCard,
-        canPlayDrawnCard: true
-      });
-      this.startTurnTimer(roomCode);
-
-      // If it's a bot turn, bot decides to play it after a brief natural delay
-      if (currentPlayer.isBot) {
-        setTimeout(() => {
-          const activeRoom = this.getRoom(roomCode);
-          if (!activeRoom || !activeRoom.gameState) return;
-          const gs = activeRoom.gameState;
-          if (gs.players[gs.currentTurnIndex]?.id !== currentPlayer.id) return;
-          if (gs.pendingDrawnCard?.playerId === currentPlayer.id) {
-            let chosenColor = null;
-            if (drawnCard.type === CARD_TYPES.WILD || drawnCard.type === CARD_TYPES.WILD_DRAW4) {
-              const botHand = gs.hands[currentPlayer.id] || [];
-              const colorCounts = { ruby: 0, sapphire: 0, emerald: 0, amber: 0 };
-              botHand.forEach(c => { if (colorCounts[c.color] !== undefined) colorCounts[c.color]++; });
-              chosenColor = Object.keys(colorCounts).reduce((a, b) => colorCounts[a] > colorCounts[b] ? a : b);
-            }
-            this.playCard(roomCode, currentPlayer.id, drawnCard.id, chosenColor);
-          }
-        }, 800);
-      }
-
-      return { success: true, drawnCard, canPlayDrawnCard: true };
-    }
-
-    // Not playable: end turn normally
-    gameState.pendingDrawnCard = null;
     gameState.actionLog.unshift({
       text: `${currentPlayer.name} drew a card from the deck.`,
       timestamp: Date.now()
@@ -561,38 +502,11 @@ export class RoomManager {
     const numPlayers = gameState.players.length;
     gameState.currentTurnIndex = (gameState.currentTurnIndex + gameState.direction + numPlayers) % numPlayers;
 
-    this.broadcastGameState(roomCode, { drawnCard, canPlayDrawnCard: false });
-    this.startTurnTimer(roomCode);
-    this.checkBotTurn(roomCode);
-
-    return { success: true, drawnCard, canPlayDrawnCard: false };
-  }
-
-  passTurn(roomCode, playerId) {
-    const room = this.getRoom(roomCode);
-    if (!room || room.status !== 'PLAYING' || !room.gameState) return { error: 'Game not active' };
-
-    const gameState = room.gameState;
-    const currentPlayer = gameState.players[gameState.currentTurnIndex];
-
-    if (currentPlayer.id !== playerId) {
-      return { error: "Not your turn to pass!" };
-    }
-
-    gameState.pendingDrawnCard = null;
-    const numPlayers = gameState.players.length;
-    gameState.currentTurnIndex = (gameState.currentTurnIndex + gameState.direction + numPlayers) % numPlayers;
-
-    gameState.actionLog.unshift({
-      text: `${currentPlayer.name} kept the drawn card and passed the turn.`,
-      timestamp: Date.now()
-    });
-
     this.broadcastGameState(roomCode);
     this.startTurnTimer(roomCode);
     this.checkBotTurn(roomCode);
 
-    return { success: true };
+    return { success: true, drawnCard };
   }
 
   shoutUno(roomCode, playerId) {
@@ -750,7 +664,6 @@ export class RoomManager {
         discardPileCount: gs.discardPile.length,
         rules: gs.rules,
         winner: gs.winner,
-        pendingDrawnCard: gs.pendingDrawnCard || null,
         actionLog: gs.actionLog.slice(0, 20),
         ...extraData
       });

@@ -317,20 +317,6 @@ export function GameSocketProvider({ children }) {
     });
   };
 
-  const passTurn = () => {
-    return new Promise((resolve, reject) => {
-      if (!socket || !room) return reject('No game');
-      socket.emit('PASS_TURN', { roomCode: room.code }, (res) => {
-        if (res?.error) {
-          setErrorMsg(res.error);
-          reject(res.error);
-        } else {
-          resolve(res);
-        }
-      });
-    });
-  };
-
   const shoutUno = () => {
     if (!socket || !room) return;
     socket.emit('SHOUT_UNO', { roomCode: room.code });
@@ -377,7 +363,6 @@ export function GameSocketProvider({ children }) {
       startGame,
       playCard,
       drawCard,
-      passTurn,
       shoutUno,
       calloutUno,
       sendEmote,
