@@ -1,16 +1,20 @@
 // src/components/effects/SpellEffect.jsx - Modern Non-Obstructive Power Banner (Thai UI)
 import React from 'react';
 import { Ban, RefreshCw, Zap, ShieldAlert } from 'lucide-react';
+import fireEffect from '../../assets/effects/fire.png';
+import flashEffect from '../../assets/effects/flash.png';
+import plantEffect from '../../assets/effects/plant.png';
+import waterEffect from '../../assets/effects/water.png';
 
 const ELEMENT_EFFECT_MAP = {
-  ruby: '/effect/fire.png',
-  red: '/effect/fire.png',
-  amber: '/effect/flash.png',
-  yellow: '/effect/flash.png',
-  emerald: '/effect/plant.png',
-  green: '/effect/plant.png',
-  sapphire: '/effect/water.png',
-  blue: '/effect/water.png'
+  ruby: fireEffect,
+  red: fireEffect,
+  amber: flashEffect,
+  yellow: flashEffect,
+  emerald: plantEffect,
+  green: plantEffect,
+  sapphire: waterEffect,
+  blue: waterEffect
 };
 
 export default function SpellEffect({ spell }) {
@@ -18,7 +22,7 @@ export default function SpellEffect({ spell }) {
 
   const { type, color, target, count } = spell;
   const isColorShift = type === 'SUPERNOVA' || type === 'WILD_SHIFT';
-  const effectImg = isColorShift ? (ELEMENT_EFFECT_MAP[color?.toLowerCase()] || ELEMENT_EFFECT_MAP.ruby) : null;
+  const effectImg = isColorShift ? (ELEMENT_EFFECT_MAP[color?.toLowerCase()] || fireEffect) : null;
 
   return (
     <div className="spell-banner-anchor">
