@@ -3282,6 +3282,58 @@ input:checked + .slider:before {
   justify-content: center;
 }
 
+/* Custom Elemental Graphic Banners (fire, flash, plant, water) */
+.elemental-banner-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 390px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: bannerPopIn 0.38s cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.95));
+}
+
+.elemental-banner-img {
+  width: 100%;
+  height: auto;
+  max-height: 105px;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.8));
+}
+
+.supernova-badge {
+  position: absolute;
+  top: -8px;
+  right: 12px;
+  background: linear-gradient(135deg, #EF4444 0%, #B91C1C 100%);
+  color: #FFFFFF;
+  font-family: var(--font-rune);
+  font-weight: 900;
+  font-size: 0.92rem;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  border: 2px solid #FCD34D;
+  box-shadow: 0 0 22px rgba(239, 68, 68, 0.9), 0 4px 12px rgba(0, 0, 0, 0.7);
+  letter-spacing: 0.5px;
+  z-index: 10;
+}
+
+@keyframes bannerPopIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-24px) scale(0.82);
+  }
+  65% {
+    transform: translateY(3px) scale(1.03);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .spell-power-banner {
   width: 100%;
   background: #121724;
