@@ -143,6 +143,58 @@ export function GameSocketProvider({ children }) {
     };
   }, []);
 
+  // Auto-sync profile update when user changes while in a room
+  useEffect(() => {
+    if (socket && socket.connected && room && user) {
+      socket.emit('UPDATE_PROFILE', {
+        roomCode: room.code,
+        player: user
+      });
+      setRoom(prev => {
+        if (!prev) return null;
+        return {
+          ...prev,
+          players: prev.players.map(p =>
+            p.id === socket.id
+              ? {
+                  ...p,
+                  name: user.name || p.name,
+                  avatar: user.avatar || p.avatar,
+                  title: user.title || p.title
+                }
+              : p
+          )
+        };
+      });
+    }
+  }, [user?.name, user?.avatar, user?.title, user?.color, room?.code]);
+
+  const updateProfile = (profileData) => {
+    const data = profileData || user;
+    if (socket && socket.connected && room && data) {
+      socket.emit('UPDATE_PROFILE', {
+        roomCode: room.code,
+        player: data
+      });
+      setRoom(prev => {
+        if (!prev) return null;
+        return {
+          ...prev,
+          players: prev.players.map(p =>
+            p.id === socket.id
+              ? {
+                  ...p,
+                  name: data.name || p.name,
+                  avatar: data.avatar || p.avatar,
+                  title: data.title || p.title
+                }
+              : p
+          )
+        };
+      });
+    }
+  };
+
   // Room Actions
   const createRoom = (options = {}) => {
     return new Promise((resolve, reject) => {
@@ -307,6 +359,7 @@ export function GameSocketProvider({ children }) {
       removeBot,
       toggleReady,
       updateRules,
+      updateProfile,
       startGame,
       playCard,
       drawCard,

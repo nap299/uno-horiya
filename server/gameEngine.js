@@ -99,11 +99,12 @@ export function canPlayCard(card, topCard, activeColor, stackedDrawCount = 0, ru
 
   if (stackedDrawCount > 0 && rules.stacking) {
     if (topCard.type === CARD_TYPES.DRAW2) {
-      return card.type === CARD_TYPES.DRAW2 || (rules.stackDraw4OnDraw2 && card.type === CARD_TYPES.WILD_DRAW4);
+      return card.type === CARD_TYPES.DRAW2 || (rules.stackDraw4OnDraw2 !== false && card.type === CARD_TYPES.WILD_DRAW4);
     }
     if (topCard.type === CARD_TYPES.WILD_DRAW4) {
       return card.type === CARD_TYPES.WILD_DRAW4;
     }
+    return false;
   }
 
   if (card.type === CARD_TYPES.WILD || card.type === CARD_TYPES.WILD_DRAW4) {
@@ -129,6 +130,8 @@ export function canPlayCard(card, topCard, activeColor, stackedDrawCount = 0, ru
 export function initializeGame(players, options = {}) {
   const rules = {
     stacking: options.stacking !== undefined ? options.stacking : true,
+    stackDraw4OnDraw2: options.stackDraw4OnDraw2 !== undefined ? options.stackDraw4OnDraw2 : true,
+    allowMultipleSameValue: options.allowMultipleSameValue !== undefined ? options.allowMultipleSameValue : true,
     turnTimer: options.turnTimer || 20,
     drawToMatch: options.drawToMatch || false,
     jumpIn: options.jumpIn || false,

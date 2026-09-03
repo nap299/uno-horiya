@@ -12,10 +12,12 @@ import {
   X
 } from 'lucide-react';
 import { useGameSocket } from '../context/GameSocketContext';
+import { useAuth } from '../context/AuthContext';
 import { AvatarIcon } from '../utils/IconRenderer';
 import { sound } from '../audio/soundEngine';
 
-export default function RoomPage() {
+export default function RoomPage({ onOpenProfile }) {
+  const { user } = useAuth();
   const {
     socket,
     room,
@@ -124,14 +126,21 @@ export default function RoomPage() {
       <div className="duelist-pedestals-grid">
         {players.map((p) => {
           const isMe = p.id === myId;
+          const currentName = isMe && user?.name ? user.name : p.name;
+          const currentAvatar = isMe && user?.avatar ? user.avatar : p.avatar;
+          const currentTitle = isMe && user?.title ? user.title : (p.title || 'นักเวทฝึกหัด');
+
           return (
             <div
               key={p.id}
-              className={`duelist-pedestal ${p.isReady || p.isHost ? 'pedestal-ready' : 'pedestal-waiting'} ${isMe ? 'pedestal-self' : ''}`}
+              className={`duelist-pedestal ${p.isReady || p.isHost ? 'pedestal-ready' : 'pedestal-waiting'} ${isMe ? 'pedestal-self pedestal-clickable' : ''}`}
+              onClick={isMe && onOpenProfile ? onOpenProfile : undefined}
+              title={isMe ? 'คลิกเพื่อแก้ไขรูปโปรไฟล์, ชื่อ หรือ ฉายา' : undefined}
             >
               <div className="pedestal-top-tags">
                 {p.isHost && <span className="tag-host">หัวหน้าห้อง</span>}
                 {p.isBot  && <span className="tag-bot">บอท AI</span>}
+                {isMe && <span className="tag-self-edit">คุณ (คลิกเปลี่ยน)</span>}
               </div>
 
               {isHost && p.isBot && (
@@ -145,15 +154,15 @@ export default function RoomPage() {
               )}
 
               <div className="pedestal-avatar-wrapper">
-                {p.avatar && p.avatar.startsWith('http') ? (
-                  <img src={p.avatar} alt={p.name} className="pedestal-avatar-img" />
+                {currentAvatar && currentAvatar.startsWith('http') ? (
+                  <img src={currentAvatar} alt={currentName} className="pedestal-avatar-img" />
                 ) : (
-                  <AvatarIcon iconId={p.avatar || 'flame'} size={24} />
+                  <AvatarIcon iconId={currentAvatar || 'flame'} size={24} />
                 )}
               </div>
 
-              <h3 className="pedestal-name">{p.name}</h3>
-              <span className="pedestal-title">{p.title || 'นักเวทฝึกหัด'}</span>
+              <h3 className="pedestal-name">{currentName}</h3>
+              <span className="pedestal-title">{currentTitle}</span>
 
               <div className={`pedestal-status-badge ${p.isReady || p.isHost ? 'status-ready' : 'status-waiting'}`}>
                 <span>{p.isHost ? 'หัวหน้าห้อง' : p.isReady ? 'พร้อมแล้ว' : 'รอพร้อม'}</span>

@@ -1,8 +1,17 @@
-// src/components/card/HandFan.jsx - Professional UNO Mobile Overlapping Card Fan
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+// src/components/card/HandFan.jsx - Natural Curved Fan with Swipe-Up Play (Duel Links Style)
+import React, { useState, useEffect, useRef } from 'react';
 import CardComponent from './CardComponent';
 import { canPlayCard } from '../../../server/gameEngine';
 import { sound } from '../../audio/soundEngine';
+import { ChevronUp, Flame } from 'lucide-react';
+
+const COLOR_NAMES_TH = {
+  ruby: 'สีแดง',
+  sapphire: 'สีน้ำเงิน',
+  emerald: 'สีเขียว',
+  amber: 'สีเหลือง',
+  celestial: 'เปลี่ยนสี'
+};
 
 export default function HandFan({
   hand = [],
@@ -15,8 +24,14 @@ export default function HandFan({
 }) {
   const containerRef = useRef(null);
   const wrapperRef = useRef(null);
-  const [selectedCardId, setSelectedCardId] = useState(null);
+  const [selectedCardIds, setSelectedCardIds] = useState([]);
+  const [draggingCardId, setDraggingCardId] = useState(null);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [containerWidth, setContainerWidth] = useState(window.innerWidth);
+
+  const dragStartRef = useRef({ x: 0, y: 0, time: 0 });
+  const isDraggingRef = useRef(false);
+  const draggedComboRef = useRef([]);
 
   const cardCount = hand.length;
 
@@ -34,135 +49,335 @@ export default function HandFan({
     return () => window.removeEventListener('resize', updateWidth);
   }, []);
 
-  // Auto-deselect if the selected card was played or removed
+  // Auto-clean selected cards if any were played or removed
   useEffect(() => {
-    if (selectedCardId && !hand.some(c => c.id === selectedCardId)) {
-      setSelectedCardId(null);
+    if (selectedCardIds.length > 0) {
+      const validIds = selectedCardIds.filter(id => hand.some(c => c.id === id));
+      if (validIds.length !== selectedCardIds.length) {
+        setSelectedCardIds(validIds);
+      }
     }
-  }, [hand, selectedCardId]);
+  }, [hand, selectedCardIds]);
 
-  // Global tap-outside deselect: clicking anywhere outside the hand wrapper deselects
+  // Global tap-outside deselect
   useEffect(() => {
-    if (!selectedCardId) return;
+    if (selectedCardIds.length === 0) return;
 
     const handleGlobalTap = (e) => {
       if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
-        setSelectedCardId(null);
+        setSelectedCardIds([]);
+        draggedComboRef.current = [];
       }
     };
 
-    document.addEventListener('pointerdown', handleGlobalTap);
-    return () => document.removeEventListener('pointerdown', handleGlobalTap);
-  }, [selectedCardId]);
+    window.addEventListener('pointerdown', handleGlobalTap);
+    return () => window.removeEventListener('pointerdown', handleGlobalTap);
+  }, [selectedCardIds]);
 
-  // Calculate dynamic overlap so ALL cards fit within 100% of the screen width
-  const baseCardWidth = containerWidth < 480 ? 58 : 72;
-  const availableWidth = Math.max(260, containerWidth - 24);
+  // Card geometry calculations
+  const baseCardWidth = containerWidth < 480 ? 74 : 86;
+  const naturalOverlap = -baseCardWidth * 0.46; // ~46% overlap keeps left corner symbols 100% visible
 
-  let marginOverlap = 0;
+  let marginOverlap = naturalOverlap;
   if (cardCount > 1) {
-    const totalWidthUnshifted = cardCount * baseCardWidth;
-    if (totalWidthUnshifted > availableWidth) {
-      marginOverlap = (availableWidth - totalWidthUnshifted) / (cardCount - 1);
-      const maxNegative = -(baseCardWidth - 14);
+    const availableWidth = Math.min(containerWidth * 0.94, 760);
+    const totalWidthNatural = baseCardWidth + (cardCount - 1) * (baseCardWidth + naturalOverlap);
+
+    if (totalWidthNatural > availableWidth) {
+      // Smoothly compress if player has many cards (8+ cards)
+      marginOverlap = (availableWidth - (cardCount * baseCardWidth)) / (cardCount - 1);
+      const maxNegative = -(baseCardWidth - 24); // Keep at least 24px of left edge visible
       if (marginOverlap < maxNegative) {
         marginOverlap = maxNegative;
       }
     }
   }
 
-  const handleCardClick = (card, playable, e) => {
-    e.stopPropagation();
+  // Auto-group same value cards together: all matching numbers go together!
+  const handleCardTap = (card, playable) => {
+    const currentSelectedCards = selectedCardIds.map(id => hand.find(c => c.id === id)).filter(Boolean);
+    const firstSelected = currentSelectedCards[0];
 
-    if (selectedCardId === card.id) {
-      // Second tap on already selected card -> Play it immediately if playable!
-      if (playable) {
-        onPlayCard(card);
-        setSelectedCardId(null);
+    const isSameGroup = (firstSelected && card.value !== undefined && card.value === firstSelected.value);
+
+    if (!isSameGroup) {
+      // Auto-select ALL matching cards in hand sharing this number/value!
+      const matchingCards = (card.value !== undefined)
+        ? hand.filter(c => c.value === card.value)
+        : [card];
+
+      if (matchingCards.length > 1) {
+        // Put the tapped card at the end of the array so it is on TOP (determining color)
+        const reordered = [...matchingCards.filter(c => c.id !== card.id), card];
+        setSelectedCardIds(reordered.map(c => c.id));
+        draggedComboRef.current = reordered;
+      } else {
+        setSelectedCardIds([card.id]);
+        draggedComboRef.current = [card];
       }
-    } else {
-      // First tap -> Select & pop up this card to display full details!
-      setSelectedCardId(card.id);
       sound.playCard(card.color);
+      return;
+    }
+
+    // Tapping within an already selected combo of the same value:
+    const isTopCard = selectedCardIds[selectedCardIds.length - 1] === card.id;
+
+    if (!isTopCard) {
+      // Tapped a different card in the group: cycle it to the top!
+      const reordered = [...selectedCardIds.filter(id => id !== card.id), card.id];
+      setSelectedCardIds(reordered);
+      draggedComboRef.current = reordered.map(id => hand.find(c => c.id === id)).filter(Boolean);
+      sound.playCard(card.color);
+    } else {
+      // Double-tapped the top card: play the combo!
+      const canPlayCombo = currentSelectedCards.some(c =>
+        canPlayCard(c, topCard, activeColor, stackedDrawCount, rules)
+      );
+      if (canPlayCombo) {
+        const topPlayed = currentSelectedCards[currentSelectedCards.length - 1];
+        sound.playCard(topPlayed.color);
+        onPlayCard(currentSelectedCards);
+        setSelectedCardIds([]);
+        draggedComboRef.current = [];
+      }
     }
   };
 
-  const handleBackgroundTap = () => {
-    // Tapping empty space within the hand area deselects
-    setSelectedCardId(null);
+  // Pointer Drag-to-Play Event Handlers (Yu-Gi-Oh! Duel Links Style - Window Level)
+  const handlePointerDown = (card, playable, e) => {
+    if (e.button !== undefined && e.button !== 0) return;
+    e.stopPropagation();
+
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startTime = Date.now();
+
+    dragStartRef.current = { x: startX, y: startY, time: startTime };
+    isDraggingRef.current = true;
+    setDraggingCardId(card.id);
+    setDragOffset({ x: 0, y: 0 });
+
+    // Determine the combo cards immediately and synchronously:
+    let combo = [];
+    if (selectedCardIds.includes(card.id) && selectedCardIds.length > 1) {
+      const existing = selectedCardIds.map(id => hand.find(c => c.id === id)).filter(Boolean);
+      combo = [...existing.filter(c => c.id !== card.id), card];
+    } else if (card.value !== undefined) {
+      const sameVal = hand.filter(c => c.value === card.value);
+      if (sameVal.length > 1) {
+        // Put the card being dragged at the end so it is on TOP!
+        combo = [...sameVal.filter(c => c.id !== card.id), card];
+      } else {
+        combo = [card];
+      }
+    } else {
+      combo = [card];
+    }
+
+    draggedComboRef.current = combo;
+    setSelectedCardIds(combo.map(c => c.id));
+
+    let lastClampedY = 0;
+
+    const onGlobalMove = (moveEvt) => {
+      if (!isDraggingRef.current) return;
+      const rawDy = moveEvt.clientY - startY;
+      const rawDx = moveEvt.clientX - startX;
+
+      const clampedY = rawDy < 0 ? rawDy : rawDy * 0.15;
+      const clampedX = rawDx * 0.4;
+      lastClampedY = clampedY;
+
+      setDragOffset({ x: clampedX, y: clampedY });
+    };
+
+    const onGlobalUp = (upEvt) => {
+      window.removeEventListener('pointermove', onGlobalMove);
+      window.removeEventListener('pointerup', onGlobalUp);
+      window.removeEventListener('pointercancel', onGlobalCancel);
+
+      if (!isDraggingRef.current) return;
+      isDraggingRef.current = false;
+
+      const rawDy = upEvt.clientY - startY;
+      const rawDx = upEvt.clientX - startX;
+      const dt = Date.now() - startTime;
+
+      // Generous, smooth upward release threshold:
+      // Dragged up > 35px OR flicked up > 20px
+      const isSwipeUp = rawDy < -35 || lastClampedY < -35 || (rawDy < -20 && dt < 350);
+
+      const cardsToPlay = (draggedComboRef.current && draggedComboRef.current.length > 0)
+        ? draggedComboRef.current
+        : (card.value !== undefined ? [...hand.filter(c => c.value === card.value && c.id !== card.id), card] : [card]);
+
+      // Check if the combo can be played: at least one card must match topCard / activeColor
+      const canPlayCombo = cardsToPlay.some(c =>
+        canPlayCard(c, topCard, activeColor, stackedDrawCount, rules)
+      );
+
+      if (canPlayCombo && isSwipeUp) {
+        const topPlayed = cardsToPlay[cardsToPlay.length - 1];
+        sound.playCard(topPlayed.color);
+        onPlayCard(cardsToPlay);
+        setSelectedCardIds([]);
+        draggedComboRef.current = [];
+        setDraggingCardId(null);
+        setDragOffset({ x: 0, y: 0 });
+        return;
+      }
+
+      // Small displacement (< 12px) = tap/click
+      const isTap = Math.abs(rawDy) < 12 && Math.abs(rawDx) < 12;
+      if (isTap) {
+        handleCardTap(card, playable);
+      }
+
+      // Snap back
+      draggedComboRef.current = [];
+      setDraggingCardId(null);
+      setDragOffset({ x: 0, y: 0 });
+    };
+
+    const onGlobalCancel = () => {
+      window.removeEventListener('pointermove', onGlobalMove);
+      window.removeEventListener('pointerup', onGlobalUp);
+      window.removeEventListener('pointercancel', onGlobalCancel);
+      isDraggingRef.current = false;
+      draggedComboRef.current = [];
+      setDraggingCardId(null);
+      setDragOffset({ x: 0, y: 0 });
+    };
+
+    window.addEventListener('pointermove', onGlobalMove, { passive: true });
+    window.addEventListener('pointerup', onGlobalUp);
+    window.addEventListener('pointercancel', onGlobalCancel);
   };
+
+  const handlePointerCancel = () => {
+    isDraggingRef.current = false;
+    draggedComboRef.current = [];
+    setDraggingCardId(null);
+    setDragOffset({ x: 0, y: 0 });
+  };
+
+  const handleBackgroundTap = () => {
+    setSelectedCardIds([]);
+    draggedComboRef.current = [];
+  };
+
+  const lastSelectedId = selectedCardIds[selectedCardIds.length - 1];
+  const lastSelectedCard = hand.find(c => c.id === lastSelectedId);
 
   return (
     <div className="pro-hand-fan-wrapper" ref={wrapperRef} onClick={handleBackgroundTap}>
-      {/* Hand Header info */}
-      <div className="pro-hand-header">
-        <span className="pro-hand-title">ไพ่ในมือ ({cardCount} ใบ)</span>
-        {isMyTurn && (
-          <span className="pro-hand-hint">
-            {selectedCardId ? 'แตะอีกครั้งเพื่อลงไพ่' : 'แตะเพื่อเลือกไพ่'}
-          </span>
-        )}
-      </div>
-
-      {/* Overlapping Fan Container - Zero Scroll, 100% Visible */}
+      {/* Curved Fan Container (Yu-Gi-Oh! Duel Links Hand Arc) */}
       <div
         ref={containerRef}
         className="pro-fan-container"
       >
         <div className="pro-fan-row">
           {hand.map((card, idx) => {
-            const playable = isMyTurn && canPlayCard(card, topCard, activeColor, stackedDrawCount, rules);
-            const isSelected = selectedCardId === card.id;
+            const isCardDirectlyPlayable = canPlayCard(card, topCard, activeColor, stackedDrawCount, rules);
+            const hasPlayableSibling = (card.value !== undefined) && hand.some(other =>
+              other.id !== card.id &&
+              other.value === card.value &&
+              canPlayCard(other, topCard, activeColor, stackedDrawCount, rules)
+            );
+            const playable = isMyTurn && (isCardDirectlyPlayable || hasPlayableSibling);
+            const selectIndex = selectedCardIds.indexOf(card.id);
+            const isSelected = selectIndex !== -1;
+            const isTopSelected = isSelected && selectIndex === selectedCardIds.length - 1;
 
-            // Clean, Professional Alignment:
-            // - การ์ดตั้งตรงเป็นระเบียบ (rotate: 0deg) สบายตา ไม่อ่านยาก
-            // - การ์ดที่ลงได้ (Playable): ยกตัวลอยขึ้นชัดเจน (-16px)
-            // - การ์ดที่ลงไม่ได้ (Locked): อยู่ระนาบฐานเรียบตรง (0px)
-            // - การ์ดที่เลือก (Selected): ลอยขึ้นสูงสุด (-32px)
-            let finalY = 0;
-            if (isSelected) {
-              finalY = -32;
-            } else if (isMyTurn && playable) {
-              finalY = -16;
-            } else {
-              finalY = 0;
+            const isThisCardDragged = draggingCardId === card.id;
+            const isGroupDragged = isDraggingRef.current && selectedCardIds.includes(draggingCardId) && isSelected;
+            const isDragging = isThisCardDragged || isGroupDragged;
+
+            // Natural Hand Curve Math (Arc Fan):
+            const mid = (cardCount - 1) / 2;
+            const t = cardCount > 1 ? (idx - mid) / mid : 0;
+
+            const maxRot = Math.min(15, 4 + cardCount * 1.6);
+            const baseRot = t * maxRot;
+
+            const maxDroop = Math.min(18, 4 + cardCount * 1.8);
+            const baseDroop = (t * t) * maxDroop;
+
+            // Dynamic offsets
+            let finalY = baseDroop;
+            let finalX = 0;
+            let finalRot = baseRot;
+            let finalScale = 1;
+
+            if (isDragging) {
+              finalY = (isSelected ? baseDroop - 32 : baseDroop) + dragOffset.y;
+              finalX = dragOffset.x;
+              finalRot = baseRot * 0.25;
+              finalScale = 1.1;
+            } else if (isSelected) {
+              finalY = baseDroop - 32;
+              finalRot = baseRot * 0.35;
+              finalScale = 1.08;
+            }
+
+            const isReleaseReady = isThisCardDragged && dragOffset.y < -35;
+
+            // Z-Index:
+            // Non-selected cards: idx + 1 (strictly preserved left-to-right stacking)
+            // Selected cards: 900 + selectIndex (so the LAST card selected is on TOP!)
+            let cardZIndex = idx + 1;
+            if (isDragging) {
+              cardZIndex = 990 + (selectIndex !== -1 ? selectIndex : 5);
+            } else if (isSelected) {
+              cardZIndex = 900 + selectIndex;
             }
 
             return (
               <div
                 key={card.id || `hand_card_${idx}`}
-                className={`pro-card-slot ${isMyTurn && playable ? 'is-playable-slot' : ''} ${isMyTurn && !playable ? 'is-locked-slot' : ''} ${isSelected ? 'is-selected-slot' : ''}`}
+                className={`pro-card-slot ${isMyTurn && playable ? 'is-playable-slot' : ''} ${isMyTurn && !playable ? 'is-locked-slot' : ''} ${isSelected ? 'is-selected-slot' : ''} ${isTopSelected ? 'is-top-selected-slot' : ''} ${isDragging ? 'is-dragging-slot' : ''}`}
                 style={{
                   marginLeft: idx === 0 ? '0px' : `${marginOverlap}px`,
-                  zIndex: isSelected ? 500 : (playable ? idx + 20 : idx + 1),
-                  transform: `translateY(${finalY}px)`
+                  zIndex: cardZIndex,
+                  transform: `translate3d(${finalX}px, ${finalY}px, 0) rotate(${finalRot}deg) scale(${finalScale})`,
+                  touchAction: 'none'
                 }}
-                onClick={(e) => handleCardClick(card, playable, e)}
+                onPointerDown={(e) => handlePointerDown(card, playable, e)}
               >
+                {/* Natural Stack Order Badge for Multi-Selection */}
+                {selectedCardIds.length > 1 && isSelected && (
+                  <div className={`combo-order-badge ${isTopSelected ? 'is-top-badge animate-bounce' : ''}`}>
+                    <span className="combo-num">#{selectIndex + 1}</span>
+                    {isTopSelected && (
+                      <span className="combo-tag">
+                        สี: {COLOR_NAMES_TH[card.color] || ''}
+                      </span>
+                    )}
+                  </div>
+                )}
+
                 <CardComponent
                   card={card}
                   isPlayable={playable}
                   disabled={isMyTurn && !playable}
                   size={containerWidth < 480 ? 'sm' : 'md'}
-                  showGlow={playable}
+                  showGlow={isSelected}
                   customStyle={{
                     width: `${baseCardWidth}px`,
-                    height: `${baseCardWidth * 1.5}px`
+                    height: `${Math.round(baseCardWidth * 1.5)}px`
                   }}
                 />
 
-                {/* Single PLAY action button on selected playable card */}
-                {isSelected && playable && (
-                  <button
-                    className="pro-cast-confirm-btn animate-scale-up"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onPlayCard(card);
-                      setSelectedCardId(null);
-                    }}
-                  >
-                    ลงไพ่
-                  </button>
+                {/* Release to Play Glowing Indicator (Duel Links Slide-Up) */}
+                {isReleaseReady && (
+                  <div className="drag-release-indicator animate-pulse-glow">
+                    <Flame size={12} />
+                    <span>
+                      {selectedCardIds.length > 1
+                        ? `ปล่อยเพื่อลง ${selectedCardIds.length} ใบ (สี: ${COLOR_NAMES_TH[lastSelectedCard?.color] || ''})`
+                        : 'ปล่อยเพื่อลงการ์ด'}
+                    </span>
+                  </div>
                 )}
               </div>
             );

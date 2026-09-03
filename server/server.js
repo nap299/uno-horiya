@@ -103,6 +103,14 @@ io.on('connection', (socket) => {
     }
   });
 
+  // Update Player Profile in Room
+  socket.on('UPDATE_PROFILE', ({ roomCode, player }) => {
+    const targetRoom = roomCode || currentRoomCode;
+    if (targetRoom && player) {
+      roomManager.updatePlayer(targetRoom, socket.id, player);
+    }
+  });
+
   // Add AI Bot
   socket.on('ADD_BOT', ({ roomCode }) => {
     roomManager.addBot(roomCode);

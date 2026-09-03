@@ -59,27 +59,35 @@ export function getCardTemplate(card, isBack = false) {
     imageFile = 'green.png';
   } else if (colorStr === 'sapphire' || colorStr === 'blue') {
     imageFile = 'blue.png';
-  } else if (colorStr === 'amber' || colorStr === 'yellow') {
+  } else if (colorStr === 'amber' || colorStr === 'yellow' || colorStr === 'gold') {
     imageFile = 'yellow.png';
   } else {
     imageFile = 'red.png';
   }
 
+  // Check if card is a skip / freeze card (ตัดข้ามเทิร์น / แช่แข็ง)
+  const cardTypeStr = (card.type || '').toLowerCase();
+  const cardValStr = String(card.value ?? '').toLowerCase();
+  const isSkip = cardTypeStr === 'skip' || cardTypeStr === 'freeze' || cardValStr === 'skip' || cardValStr === 'freeze';
+
   // Corner symbol calculation
   let symbol = '';
   if (card.type === 'number') {
-    symbol = card.value != null ? card.value : '';
+    symbol = card.value !== undefined && card.value !== null ? String(card.value) : '';
   } else if (card.type === 'draw2') {
     symbol = '+2';
-  } else if (card.type === 'skip') {
+  } else if (isSkip) {
     symbol = '⊘';
   }
+
+  const hasCorners = symbol !== '' || isSkip;
 
   return {
     image: `./cardtemplate/${imageFile}`,
     fallback: `/cardtemplate/${imageFile}`,
-    showCorners: true,
-    symbol: symbol
+    showCorners: hasCorners,
+    symbol: symbol,
+    isSkip: isSkip
   };
 }
 
@@ -149,13 +157,45 @@ export default function CardComponent({
       />
 
       {/* Top-Left & Bottom-Right Corner Symbols */}
-      {template.showCorners && template.symbol && (
+      {template.showCorners && (
         <>
           <div className="card-corner corner-top-left">
-            <span className="corner-symbol-text">{template.symbol}</span>
+            {template.isSkip ? (
+              <svg
+                viewBox="0 0 24 24"
+                className="corner-skip-svg"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-label="Skip"
+              >
+                <circle cx="12" cy="12" r="9" />
+                <line x1="5.6" y1="5.6" x2="18.4" y2="18.4" />
+              </svg>
+            ) : (
+              <span className="corner-symbol-text">{template.symbol}</span>
+            )}
           </div>
           <div className="card-corner corner-bottom-right">
-            <span className="corner-symbol-text">{template.symbol}</span>
+            {template.isSkip ? (
+              <svg
+                viewBox="0 0 24 24"
+                className="corner-skip-svg"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-label="Skip"
+              >
+                <circle cx="12" cy="12" r="9" />
+                <line x1="5.6" y1="5.6" x2="18.4" y2="18.4" />
+              </svg>
+            ) : (
+              <span className="corner-symbol-text">{template.symbol}</span>
+            )}
           </div>
         </>
       )}

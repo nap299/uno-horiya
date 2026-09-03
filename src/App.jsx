@@ -48,7 +48,7 @@ export default function App() {
         {gameState ? (
           <GamePage />
         ) : room ? (
-          <RoomPage />
+          <RoomPage onOpenProfile={() => setShowProfileModal(true)} />
         ) : (
           <LobbyPage
             onOpenProfile={() => setShowProfileModal(true)}

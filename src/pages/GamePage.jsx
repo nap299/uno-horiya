@@ -11,7 +11,8 @@ import GameOverModal from '../components/game/GameOverModal';
 import SpellEffect from '../components/effects/SpellEffect';
 import { ELEMENT_THEMES } from '../models/cardThemes';
 import { canPlayCard } from '../../server/gameEngine';
-import { ShieldAlert, Layers, PlusCircle } from 'lucide-react';
+import { ShieldAlert, Layers, PlusCircle, Crown } from 'lucide-react';
+import { AvatarIcon } from '../utils/IconRenderer';
 import SoundControl from '../components/common/SoundControl';
 
 // Sub-component for Smooth 3D Sweeping Game Flow Arrows
@@ -107,6 +108,11 @@ export default function GamePage() {
 
   const myId = socket?.id;
   const players = gameState.players || [];
+  const myPlayer = players.find(p => p.id === myId) || room?.players?.find(p => p.id === myId);
+  const currentAvatar = myPlayer?.avatar || user?.avatar || 'flame';
+  const currentName = myPlayer?.name || user?.name || 'ผู้เล่น';
+  const currentTitle = myPlayer?.title || user?.title || 'นักเวทฝึกหัด';
+
   const myIndex = players.findIndex(p => p.id === myId);
   const currentPlayer = players[gameState.currentTurnIndex];
   const isMyTurn = currentPlayer?.id === myId;
@@ -137,18 +143,24 @@ export default function GamePage() {
     reorderedOpponents.push(...players);
   }
 
-  const handlePlayCard = (card) => {
+  const handlePlayCard = (cardOrCards) => {
     if (!isMyTurn) return;
-    if (card.type === 'wild' || card.type === 'wild_draw4') {
-      setPendingWildCard(card);
+    const cards = Array.isArray(cardOrCards) ? cardOrCards : [cardOrCards];
+    const topPlayedCard = cards[cards.length - 1];
+
+    if (topPlayedCard.type === 'wild' || topPlayedCard.type === 'wild_draw4') {
+      setPendingWildCard(cards);
     } else {
-      playCard(card.id);
+      const cardIds = cards.map(c => c.id);
+      playCard(cardIds.length === 1 ? cardIds[0] : cardIds);
     }
   };
 
   const handleSelectWildColor = (chosenColor) => {
     if (pendingWildCard) {
-      playCard(pendingWildCard.id, chosenColor);
+      const cards = Array.isArray(pendingWildCard) ? pendingWildCard : [pendingWildCard];
+      const cardIds = cards.map(c => c.id);
+      playCard(cardIds.length === 1 ? cardIds[0] : cardIds, chosenColor);
       setPendingWildCard(null);
     }
   };
@@ -235,16 +247,6 @@ export default function GamePage() {
               size="md"
               customStyle={{ cursor: isMyTurn ? 'pointer' : 'default' }}
             />
-            {isMyTurn && (
-              <div className={`mobile-draw-badge ${mustDraw ? 'badge-urgent-draw animate-bounce' : 'animate-pulse-glow'}`}>
-                <PlusCircle size={12} />
-                <span>
-                  {gameState.stackedDrawCount > 0
-                    ? `จั่ว +${gameState.stackedDrawCount}`
-                    : (mustDraw ? 'กดจั่วไพ่' : 'จั่วไพ่')}
-                </span>
-              </div>
-            )}
             <div className="mobile-deck-count">
               <Layers size={10} />
               <span>{gameState.drawPileCount || 90}</span>
@@ -264,15 +266,9 @@ export default function GamePage() {
         </div>
       </div>
 
-      {/* 4. Floating Action Controls (UNO & Hint) */}
+      {/* 4. Action & Alert Controls (UNO Shout Button) */}
       <div className="mobile-floating-actions">
-        <div className="hand-status-indicator">
-          {isMyTurn && mustDraw && (
-            <span className="must-draw-text-hint animate-fade-in">
-              ไม่มีไพ่ที่ลงได้ — กดที่กองจั่วไพ่
-            </span>
-          )}
-        </div>
+        <div className="floating-actions-spacer" />
 
         <UnoButton
           onShoutUno={shoutUno}
@@ -282,16 +278,18 @@ export default function GamePage() {
         />
       </div>
 
-      {/* 5. Hand Fan (Bottom Center) */}
-      <HandFan
-        hand={myHand}
-        topCard={topCard}
-        activeColor={activeColor}
-        stackedDrawCount={gameState.stackedDrawCount}
-        rules={gameState.rules}
-        isMyTurn={isMyTurn}
-        onPlayCard={handlePlayCard}
-      />
+      {/* 5. Pure Hand Fan (Centered, Natural Hand Arc without Profile Clutter) */}
+      <div className="duel-bottom-deck-zone">
+        <HandFan
+          hand={myHand}
+          topCard={topCard}
+          activeColor={activeColor}
+          stackedDrawCount={gameState.stackedDrawCount}
+          rules={gameState.rules}
+          isMyTurn={isMyTurn}
+          onPlayCard={handlePlayCard}
+        />
+      </div>
 
       {pendingWildCard && (
         <ColorPickerModal

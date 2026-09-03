@@ -84,6 +84,34 @@ export class RoomManager {
     return { room };
   }
 
+  updatePlayer(roomCode, playerId, playerData = {}) {
+    const room = this.getRoom(roomCode);
+    if (!room) return null;
+
+    const player = room.players.find(p => p.id === playerId);
+    if (!player) return null;
+
+    if (playerData.name) player.name = playerData.name.trim();
+    if (playerData.avatar) player.avatar = playerData.avatar;
+    if (playerData.title) player.title = playerData.title.trim();
+    if (playerData.color) player.color = playerData.color;
+
+    if (room.gameState && room.gameState.players) {
+      const gp = room.gameState.players.find(p => p.id === playerId);
+      if (gp) {
+        if (playerData.name) gp.name = playerData.name.trim();
+        if (playerData.avatar) gp.avatar = playerData.avatar;
+        if (playerData.title) gp.title = playerData.title.trim();
+      }
+    }
+
+    this.broadcastRoomUpdate(roomCode);
+    if (room.gameState) {
+      this.broadcastGameState(roomCode);
+    }
+    return room;
+  }
+
   addBot(roomCode) {
     const room = this.getRoom(roomCode);
     if (!room || room.status !== 'LOBBY') return null;
@@ -253,30 +281,58 @@ export class RoomManager {
     }
 
     const playerHand = gameState.hands[playerId];
-    const cardIndex = playerHand.findIndex(c => c.id === cardId);
-    if (cardIndex === -1) return { error: "Card not in hand!" };
+    const cardIds = Array.isArray(cardId) ? cardId : [cardId];
+    if (cardIds.length === 0) return { error: "No card specified" };
 
-    const card = playerHand[cardIndex];
-
-    if (!canPlayCard(card, gameState.topCard, gameState.activeColor, gameState.stackedDrawCount, gameState.rules)) {
-      return { error: "That card cannot be played now!" };
+    // Find all cards in hand
+    const cardsToPlay = [];
+    for (const id of cardIds) {
+      const found = playerHand.find(c => c.id === id);
+      if (!found) return { error: "Card not in hand!" };
+      cardsToPlay.push(found);
     }
 
-    playerHand.splice(cardIndex, 1);
+    // If multiple cards, ensure they all share the same number/value!
+    if (cardsToPlay.length > 1) {
+      const firstVal = cardsToPlay[0].value;
+      const allSameValue = cardsToPlay.every(c => c.value === firstVal);
+      if (!allSameValue) {
+        return { error: "All cards played together must share the same number/value!" };
+      }
+    }
+
+    // Check if the combo is playable on current topCard
+    // At least one card in the set must match topCard / activeColor according to canPlayCard
+    const canPlayCombo = cardsToPlay.some(c =>
+      canPlayCard(c, gameState.topCard, gameState.activeColor, gameState.stackedDrawCount, gameState.rules)
+    );
+    if (!canPlayCombo) {
+      return { error: "That card combo cannot be played now!" };
+    }
+
+    // Remove cards from hand
+    for (const played of cardsToPlay) {
+      const idx = playerHand.findIndex(c => c.id === played.id);
+      if (idx !== -1) playerHand.splice(idx, 1);
+    }
+
+    // Push cards into discard pile in order; the LAST card in cardIds lands on top!
+    for (const played of cardsToPlay) {
+      gameState.discardPile.push(played);
+    }
+    const lastCard = cardsToPlay[cardsToPlay.length - 1];
+    gameState.topCard = lastCard;
 
     let spellEffect = null;
 
-    if (card.type === CARD_TYPES.WILD || card.type === CARD_TYPES.WILD_DRAW4) {
+    if (lastCard.type === CARD_TYPES.WILD || lastCard.type === CARD_TYPES.WILD_DRAW4) {
       if (!chosenColor || !COLORS.includes(chosenColor)) {
         chosenColor = COLORS[0];
       }
       gameState.activeColor = chosenColor;
     } else {
-      gameState.activeColor = card.color;
+      gameState.activeColor = lastCard.color;
     }
-
-    gameState.topCard = card;
-    gameState.discardPile.push(card);
 
     if (playerHand.length === 1) {
       if (!gameState.unoState[playerId].hasCalledUno) {
@@ -306,15 +362,17 @@ export class RoomManager {
     let skipCount = 1;
     const numPlayers = gameState.players.length;
 
-    if (card.type === CARD_TYPES.SKIP) {
-      skipCount = 2;
-      spellEffect = { type: 'FREEZE', target: gameState.players[(gameState.currentTurnIndex + gameState.direction + numPlayers) % numPlayers].name };
+    if (lastCard.type === CARD_TYPES.SKIP) {
+      skipCount = 1 + cardsToPlay.length;
+      spellEffect = { type: 'FREEZE', target: gameState.players[(gameState.currentTurnIndex + gameState.direction + numPlayers) % numPlayers]?.name || 'Skipped!' };
       gameState.actionLog.unshift({
-        text: `${currentPlayer.name} cast Frost Stasis! ${spellEffect.target} was frozen!`,
+        text: `${currentPlayer.name} cast ${cardsToPlay.length}x Frost Stasis!`,
         timestamp: Date.now()
       });
-    } else if (card.type === CARD_TYPES.REVERSE) {
-      gameState.direction *= -1;
+    } else if (lastCard.type === CARD_TYPES.REVERSE) {
+      if (cardsToPlay.length % 2 !== 0) {
+        gameState.direction *= -1;
+      }
       if (numPlayers === 2) {
         skipCount = 2;
       }
@@ -323,52 +381,57 @@ export class RoomManager {
         text: `${currentPlayer.name} opened Chrono Rift! Flow reversed!`,
         timestamp: Date.now()
       });
-    } else if (card.type === CARD_TYPES.DRAW2) {
+    } else if (lastCard.type === CARD_TYPES.DRAW2) {
+      const addedCount = 2 * cardsToPlay.length;
       if (gameState.rules.stacking) {
-        gameState.stackedDrawCount += 2;
+        gameState.stackedDrawCount += addedCount;
         skipCount = 1;
       } else {
         const nextIdx = (gameState.currentTurnIndex + gameState.direction + numPlayers) % numPlayers;
         const targetPlayer = gameState.players[nextIdx];
-        this.giveCards(gameState, targetPlayer.id, 2);
+        this.giveCards(gameState, targetPlayer.id, addedCount);
         skipCount = 2;
       }
-      spellEffect = { type: 'LIGHTNING', count: 2 };
+      spellEffect = { type: 'LIGHTNING', count: addedCount };
       gameState.actionLog.unshift({
-        text: `${currentPlayer.name} cast Twin Lightning (+2) [Stack: ${gameState.stackedDrawCount}]!`,
+        text: `${currentPlayer.name} cast ${cardsToPlay.length}x Twin Lightning (+${addedCount}) [Stack: ${gameState.stackedDrawCount}]!`,
         timestamp: Date.now()
       });
-    } else if (card.type === CARD_TYPES.WILD_DRAW4) {
+    } else if (lastCard.type === CARD_TYPES.WILD_DRAW4) {
+      const addedCount = 4 * cardsToPlay.length;
       if (gameState.rules.stacking) {
-        gameState.stackedDrawCount += 4;
+        gameState.stackedDrawCount += addedCount;
         skipCount = 1;
       } else {
         const nextIdx = (gameState.currentTurnIndex + gameState.direction + numPlayers) % numPlayers;
         const targetPlayer = gameState.players[nextIdx];
-        this.giveCards(gameState, targetPlayer.id, 4);
+        this.giveCards(gameState, targetPlayer.id, addedCount);
         skipCount = 2;
       }
-      spellEffect = { type: 'SUPERNOVA', color: chosenColor, count: 4 };
+      spellEffect = { type: 'SUPERNOVA', color: chosenColor, count: addedCount };
       gameState.actionLog.unshift({
-        text: `${currentPlayer.name} summoned Supernova (+4) into ${chosenColor.toUpperCase()}!`,
+        text: `${currentPlayer.name} summoned Supernova (+${addedCount}) into ${chosenColor.toUpperCase()}!`,
         timestamp: Date.now()
       });
-    } else if (card.type === CARD_TYPES.WILD) {
+    } else if (lastCard.type === CARD_TYPES.WILD) {
       spellEffect = { type: 'WILD_SHIFT', color: chosenColor };
       gameState.actionLog.unshift({
         text: `${currentPlayer.name} shifted element into ${chosenColor.toUpperCase()}!`,
         timestamp: Date.now()
       });
     } else {
+      const comboLabel = cardsToPlay.length > 1
+        ? `${cardsToPlay.length}x Rune [${lastCard.value}] (Color: ${gameState.activeColor.toUpperCase()})`
+        : lastCard.name;
       gameState.actionLog.unshift({
-        text: `${currentPlayer.name} played ${card.name}`,
+        text: `${currentPlayer.name} played ${comboLabel}`,
         timestamp: Date.now()
       });
     }
 
     gameState.currentTurnIndex = (gameState.currentTurnIndex + (gameState.direction * skipCount) + (numPlayers * 10)) % numPlayers;
 
-    this.broadcastGameState(roomCode, { spellEffect, playedCard: card });
+    this.broadcastGameState(roomCode, { spellEffect, playedCard: lastCard, playedCards: cardsToPlay });
     this.startTurnTimer(roomCode);
     this.checkBotTurn(roomCode);
 

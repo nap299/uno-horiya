@@ -1082,7 +1082,7 @@ body {
   cursor: not-allowed;
 }
 
-/* Corner Symbol Badges (Top-Left & Bottom-Right) */
+/* Corner Symbol Badges (Top-Left & Bottom-Right) Centered in Card Template Sockets */
 .card-corner {
   position: absolute;
   z-index: 5;
@@ -1090,62 +1090,71 @@ body {
   align-items: center;
   justify-content: center;
   pointer-events: none;
+  width: 25%;
+  height: 17%;
 }
 
 .corner-top-left {
-  top: 3px;
-  left: 5px;
+  top: 6.5%;
+  left: 10%;
 }
 
 .corner-bottom-right {
-  bottom: 3px;
-  right: 5px;
+  bottom: 6.5%;
+  right: 10%;
   transform: rotate(180deg);
 }
 
 .corner-symbol-text {
   font-family: var(--font-rune);
-  font-size: 0.95rem;
+  font-size: 1.15rem;
   font-weight: 900;
   font-style: italic;
   color: #FFFFFF;
   line-height: 1;
   text-shadow:
-    0 1px 2px #000000,
-    0 0 4px #000000,
-    -1px -1px 0 #000000,
-    1px -1px 0 #000000,
-    -1px 1px 0 #000000,
-    1px 1px 0 #000000;
+    0 1px 3px #000000,
+    0 0 6px #000000,
+    -1.5px -1.5px 0 #000000,
+    1.5px -1.5px 0 #000000,
+    -1.5px 1.5px 0 #000000,
+    1.5px 1.5px 0 #000000;
   user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.corner-skip-svg {
+  width: 17px;
+  height: 17px;
+  color: #FFFFFF;
+  stroke: #FFFFFF;
+  filter:
+    drop-shadow(0 1px 2px #000000)
+    drop-shadow(0 0 3px #000000)
+    drop-shadow(-1px -1px 0 #000000)
+    drop-shadow(1px -1px 0 #000000);
+  display: block;
 }
 
 .card-size-sm .corner-symbol-text {
-  font-size: 0.78rem;
+  font-size: 0.95rem;
 }
 
-.card-size-sm .corner-top-left {
-  top: 2px;
-  left: 4px;
-}
-
-.card-size-sm .corner-bottom-right {
-  bottom: 2px;
-  right: 4px;
+.card-size-sm .corner-skip-svg {
+  width: 13.5px;
+  height: 13.5px;
 }
 
 .card-size-lg .corner-symbol-text {
-  font-size: 1.25rem;
+  font-size: 1.35rem;
 }
 
-.card-size-lg .corner-top-left {
-  top: 5px;
-  left: 7px;
-}
-
-.card-size-lg .corner-bottom-right {
-  bottom: 5px;
-  right: 7px;
+.card-size-lg .corner-skip-svg {
+  width: 20px;
+  height: 20px;
 }
 
 /* Solid Card Back */
@@ -1562,16 +1571,15 @@ body {
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
 }
 
-/* Center Circular Vortex Table */
+/* Center Circular Vortex Table (Centered in dead-middle of arena) */
 .mobile-center-table {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 0 auto;
+  margin: auto auto;
   flex: 1;
-  max-height: 200px;
   z-index: 10;
   width: 100%;
 }
@@ -1579,11 +1587,11 @@ body {
 /* Golden Summoning Circle in Center */
 .mobile-summoning-circle {
   position: absolute;
-  width: 180px;
-  height: 180px;
+  width: 220px;
+  height: 220px;
   border-radius: 50%;
   border: 2.5px solid rgba(245, 158, 11, 0.75);
-  box-shadow: inset 0 0 16px rgba(245, 158, 11, 0.2), 0 0 14px rgba(245, 158, 11, 0.3);
+  box-shadow: inset 0 0 18px rgba(245, 158, 11, 0.22), 0 0 16px rgba(245, 158, 11, 0.35);
   pointer-events: none;
   display: flex;
   align-items: center;
@@ -1593,8 +1601,8 @@ body {
 /* Direction Arrows around Golden Circle (Continuously Rotating 3D Game Flow Arrows) */
 .arena-direction-arrows {
   position: absolute;
-  width: 210px;
-  height: 210px;
+  width: 254px;
+  height: 254px;
   pointer-events: none;
   border-radius: 50%;
   display: flex;
@@ -1622,19 +1630,19 @@ body {
 
 .curved-arrow-box {
   position: absolute;
-  width: 80px;
-  height: 32px;
+  width: 96px;
+  height: 38px;
   pointer-events: none;
 }
 
 .arrow-box-top {
-  top: -16px;
+  top: -19px;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .arrow-box-bottom {
-  bottom: -16px;
+  bottom: -19px;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -1648,18 +1656,18 @@ body {
 
 .mobile-stacked-banner {
   position: absolute;
-  top: -30px;
+  top: -32px;
   background: #D90429;
   border: 1px solid #EF233C;
   color: #FFF;
-  padding: 3px 12px;
+  padding: 3px 14px;
   border-radius: 12px;
-  font-size: 0.74rem;
+  font-size: 0.76rem;
   font-weight: 600;
   display: flex;
   align-items: center;
   gap: 4px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.75);
   z-index: 20;
 }
 
@@ -1667,8 +1675,43 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 20px;
   z-index: 12;
+}
+
+/* Sizing for the cards on the center table (Larger, detailed & beautiful) */
+.mobile-table-piles .fantasy-card {
+  width: 82px !important;
+  height: 124px !important;
+  border-radius: 10px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.85);
+}
+
+.mobile-table-piles .corner-symbol-text {
+  font-size: 1.05rem !important;
+}
+
+.mobile-table-piles .corner-skip-svg {
+  width: 16.5px !important;
+  height: 16.5px !important;
+}
+
+
+
+@media (min-width: 480px) {
+  .mobile-table-piles .fantasy-card {
+    width: 96px !important;
+    height: 144px !important;
+    border-radius: 12px !important;
+  }
+  .mobile-summoning-circle {
+    width: 250px;
+    height: 250px;
+  }
+  .arena-direction-arrows {
+    width: 290px;
+    height: 290px;
+  }
 }
 
 .mobile-draw-deck {
@@ -1687,31 +1730,11 @@ body {
   height: 100%;
   background: #0E131E;
   border: 1.5px solid #20293A;
-  border-radius: 9px;
+  border-radius: 10px;
 }
 .deck-shadow-1 { top: -2px; left: 2px; }
 .deck-shadow-2 { top: -4px; left: 4px; }
 .deck-shadow-3 { top: -6px; left: 6px; }
-
-.mobile-draw-badge {
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #D90429;
-  color: #FFFFFF;
-  font-size: 0.65rem;
-  font-weight: 500;
-  padding: 2px 8px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  white-space: nowrap;
-  box-shadow: 0 2px 0 #9E1C27;
-  border: 1px solid #FF5C6A;
-  z-index: 10;
-}
 
 /* Must Draw Highlight: เมื่อถึงตาเราและไม่มีการ์ดที่ลงได้ */
 .mobile-draw-deck.deck-must-draw .fantasy-card {
@@ -1720,29 +1743,22 @@ body {
   animation: pulseUrgent 1s infinite alternate;
 }
 
-.mobile-draw-badge.badge-urgent-draw {
-  background: #F59E0B !important;
-  color: #0B0E17 !important;
-  font-weight: 600 !important;
-  font-size: 0.72rem !important;
-  border: 1.5px solid #FFFFFF !important;
-  box-shadow: 0 3px 12px rgba(245, 158, 11, 0.8) !important;
-}
-
 .mobile-deck-count {
   position: absolute;
-  top: 4px;
-  right: 4px;
-  background: #0E131E;
+  top: 5px;
+  right: 5px;
+  background: rgba(14, 19, 30, 0.9);
   border: 1px solid #28344C;
-  border-radius: 4px;
-  padding: 1px 4px;
+  border-radius: 5px;
+  padding: 2px 6px;
   display: flex;
   align-items: center;
-  gap: 2px;
-  font-size: 0.58rem;
-  font-weight: 500;
-  color: var(--text-secondary);
+  gap: 3px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #CBD5E1;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+  z-index: 10;
 }
 
 .mobile-discard-pile {
@@ -1846,7 +1862,45 @@ body {
   letter-spacing: 1px;
 }
 
-/* 5. Professional Hand Fan */
+/* =========================================================
+   Yu-Gi-Oh! Duel Links Style Bottom Arena & Hand Rack
+   ========================================================= */
+
+.arena-turn-hint-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 2px;
+  z-index: 20;
+}
+
+.duel-bottom-deck-zone {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 25;
+  padding-bottom: max(4px, env(safe-area-inset-bottom));
+  margin-top: auto;
+}
+
+/* Hand Rack (Cards Centered Symmetrically in the Screen) */
+.duel-hand-rack-wrapper {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  overflow: visible;
+}
+
+
+
+/* Hand Fan Rack (Yu-Gi-Oh! Natural Curved Fan - Centered in Screen) */
 .pro-hand-fan-wrapper {
   position: relative;
   width: 100%;
@@ -1855,34 +1909,38 @@ body {
   flex-direction: column;
   align-items: center;
   z-index: 25;
-  padding-bottom: max(22px, env(safe-area-inset-bottom));
   margin-bottom: 0px;
   flex-shrink: 0;
+  touch-action: none;
 }
 
 .pro-hand-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 12px;
   width: 100%;
-  padding: 0 6px;
+  padding: 0 8px;
   margin-bottom: 2px;
 }
 
 .pro-hand-title {
-  font-size: 0.7rem;
-  font-weight: 500;
+  font-size: 0.68rem;
+  font-weight: 600;
   color: #CBD5E1;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.4px;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 .pro-hand-hint {
-  font-size: 0.65rem;
-  font-weight: 500;
+  font-size: 0.62rem;
+  font-weight: 600;
   color: #FBBF24;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.4px;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  gap: 3px;
 }
 
 .pro-fan-container {
@@ -1891,11 +1949,10 @@ body {
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  padding-top: 18px;
-  padding-bottom: 18px;
-  padding-left: 4px;
-  padding-right: 4px;
+  padding-top: 36px;
+  padding-bottom: 4px;
   overflow: visible;
+  touch-action: none;
 }
 
 .pro-fan-row {
@@ -1905,68 +1962,153 @@ body {
   position: relative;
   width: auto;
   max-width: 100%;
+  margin: 0 auto;
 }
 
-/* Compact Responsive Cards inside HandFan */
+/* Yu-Gi-Oh! Duel Links Proportions for Hand Cards */
 .pro-fan-row .fantasy-card {
-  width: 58px !important;
-  height: 90px !important;
-  border-radius: 8px !important;
+  width: 74px !important;
+  height: 111px !important;
+  border-radius: 9px !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.8);
 }
 
 .pro-fan-row .corner-symbol-text {
-  font-size: 0.82rem !important;
+  font-size: 0.95rem !important;
 }
 
-.pro-fan-row .corner-top-left {
-  top: 2px !important;
-  left: 4px !important;
+.pro-fan-row .corner-skip-svg {
+  width: 14.5px !important;
+  height: 14.5px !important;
 }
 
-.pro-fan-row .corner-bottom-right {
-  bottom: 2px !important;
-  right: 4px !important;
+
+
+@media (min-width: 480px) {
+  .pro-fan-row .fantasy-card {
+    width: 86px !important;
+    height: 129px !important;
+    border-radius: 11px !important;
+  }
 }
 
 .pro-card-slot {
   position: relative;
   transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), margin 0.2s ease;
-  cursor: pointer;
+  cursor: grab;
   flex-shrink: 0;
+  transform-origin: 50% 130%;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
 }
 
-/* Playable Card (Lifts up, bright & highlighted) */
+/* Playable Card in Hand (Bright & vibrant, but clean border that doesn't bleed onto neighbors) */
 .pro-card-slot.is-playable-slot .fantasy-card {
-  cursor: pointer;
-  border-color: #FFFFFF !important;
-  box-shadow: 0 0 0 2px #FFFFFF, 0 8px 20px rgba(0, 0, 0, 0.85) !important;
-  filter: brightness(1.05);
+  cursor: grab;
+  border-color: rgba(255, 255, 255, 0.7) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.8) !important;
+  filter: brightness(1.15) saturate(1.1) !important;
 }
 
-/* Locked / Non-Playable Card */
+/* Locked / Non-Playable Card (Dim, dark, muted color) */
 .pro-card-slot.is-locked-slot {
   cursor: not-allowed;
 }
 
 .pro-card-slot.is-locked-slot .fantasy-card {
   opacity: 1 !important;
-  filter: brightness(0.6) saturate(0.65) !important;
-  border-color: rgba(255, 255, 255, 0.35) !important;
+  filter: brightness(0.42) saturate(0.55) contrast(0.9) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
   cursor: not-allowed;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.6) !important;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.75) !important;
 }
 
-/* Selected Card (Pops up with clear white outline) */
-.pro-card-slot.is-selected-slot {
-  transform: translateY(-30px) scale(1.1) !important;
-  z-index: 600 !important;
-}
-
+/* Selected Card (When tapped/clicked, THAT card pops up prominently with white glowing rim) */
 .pro-card-slot.is-selected-slot .fantasy-card {
   opacity: 1 !important;
-  filter: brightness(1.1) saturate(1) !important;
+  filter: brightness(1.25) saturate(1.2) !important;
   border-color: #FFFFFF !important;
-  box-shadow: 0 0 0 3px #FFFFFF, 0 16px 36px rgba(0, 0, 0, 0.95) !important;
+  box-shadow: 0 0 0 2.5px #FFFFFF, 0 0 24px rgba(255, 255, 255, 0.9), 0 16px 36px rgba(0, 0, 0, 0.95) !important;
+}
+
+/* Top / Determining Card in Multi-Selection */
+.pro-card-slot.is-top-selected-slot .fantasy-card {
+  border-color: #F59E0B !important;
+  box-shadow: 0 0 0 3px #FFFFFF, 0 0 26px rgba(245, 158, 11, 0.9), 0 16px 36px rgba(0, 0, 0, 0.95) !important;
+}
+
+/* Multi-Select Natural Stack Order Badges */
+.combo-order-badge {
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(14, 20, 36, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #FFFFFF;
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 1px 7px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.85);
+  pointer-events: none;
+  z-index: 50;
+}
+
+.combo-order-badge.is-top-badge {
+  background: linear-gradient(135deg, #F59E0B, #D97706);
+  border-color: #FFFFFF;
+  color: #0B0E17;
+  font-weight: 900;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.85), 0 4px 12px rgba(0, 0, 0, 0.85);
+}
+
+.combo-order-badge .combo-tag {
+  font-size: 0.58rem;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 0 5px;
+  border-radius: 6px;
+  letter-spacing: 0.4px;
+}
+
+/* Dragging State (Smooth touch follow, no lag) */
+.pro-card-slot.is-dragging-slot {
+  cursor: grabbing !important;
+  transition: none !important;
+  z-index: 999 !important;
+}
+
+.pro-card-slot.is-dragging-slot .fantasy-card {
+  border-color: #F59E0B !important;
+  box-shadow: 0 0 0 3px #F59E0B, 0 20px 40px rgba(0, 0, 0, 0.95) !important;
+  filter: brightness(1.18) !important;
+}
+
+/* Slide-Up Release Indicator */
+.drag-release-indicator {
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #F59E0B, #D97706);
+  color: #0B0E17;
+  font-size: 0.62rem;
+  font-weight: 900;
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid #FFFFFF;
+  box-shadow: 0 2px 10px rgba(245, 158, 11, 0.8), 0 4px 12px rgba(0, 0, 0, 0.8);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  z-index: 999;
+  pointer-events: none;
 }
 
 .emote-btn:active {
@@ -2042,67 +2184,6 @@ body {
   font-weight: 900;
   color: #F59E0B;
   letter-spacing: 0.5px;
-}
-
-.pro-fan-container {
-  position: relative;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  padding-top: 32px;
-  padding-bottom: 2px;
-  overflow: visible;
-}
-
-.pro-fan-row {
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  position: relative;
-  width: auto;
-  max-width: 100%;
-}
-
-.pro-card-slot {
-  position: relative;
-  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), margin 0.2s ease;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-/* Playable Card (Lifts up, bright & highlighted) */
-.pro-card-slot.is-playable-slot .fantasy-card {
-  cursor: pointer;
-  border-color: #FFFFFF !important;
-  box-shadow: 0 0 0 2px #FFFFFF, 0 8px 20px rgba(0, 0, 0, 0.85) !important;
-  filter: brightness(1.05);
-}
-
-/* Locked / Non-Playable Card (Solid, muted, perfectly readable, NEVER semi-transparent) */
-.pro-card-slot.is-locked-slot {
-  cursor: not-allowed;
-}
-
-.pro-card-slot.is-locked-slot .fantasy-card {
-  opacity: 1 !important;
-  filter: brightness(0.6) saturate(0.65) !important;
-  border-color: rgba(255, 255, 255, 0.35) !important;
-  cursor: not-allowed;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.6) !important;
-}
-
-/* Selected Card (Pops up with clear white outline) */
-.pro-card-slot.is-selected-slot {
-  transform: translateY(-32px) scale(1.12) !important;
-  z-index: 600 !important;
-}
-
-.pro-card-slot.is-selected-slot .fantasy-card {
-  opacity: 1 !important;
-  filter: brightness(1.1) saturate(1) !important;
-  border-color: #FFFFFF !important;
-  box-shadow: 0 0 0 3px #FFFFFF, 0 16px 36px rgba(0, 0, 0, 0.95) !important;
 }
 
 .pro-cast-confirm-btn {
@@ -2282,6 +2363,34 @@ body {
   padding: 1px 6px;
   border-radius: 6px;
   letter-spacing: 0.8px;
+}
+
+.tag-self-edit {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34D399;
+  font-size: 0.58rem;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.pedestal-self.pedestal-clickable {
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pedestal-self.pedestal-clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.25);
+  border-color: #F59E0B;
+}
+
+.pedestal-self.pedestal-clickable:hover .tag-self-edit {
+  background: rgba(16, 185, 129, 0.35);
+  transform: scale(1.05);
 }
 
 .btn-remove-bot-x {

@@ -77,6 +77,12 @@ export const ACTION_SPELL_INFO = {
     symbol: '⊘',
     lore: 'แช่แข็งศัตรู ข้ามตาเล่นของผู้เล่นคนถัดไปทันที'
   },
+  freeze: {
+    name: 'แช่แข็ง ข้ามเทิร์น (Skip)',
+    iconKey: 'skip',
+    symbol: '⊘',
+    lore: 'แช่แข็งศัตรู ข้ามตาเล่นของผู้เล่นคนถัดไปทันที'
+  },
   reverse: {
     name: 'ย้อนกลับทิศทาง (Reverse)',
     iconKey: 'reverse',
