@@ -233,6 +233,13 @@ export default function GamePage() {
           </div>
         )}
 
+        {/* Any Color Free Play Indicator after Reverse */}
+        {activeColor === 'any' && (
+          <div className="mobile-any-color-banner animate-bounce">
+            <span>ลงสีไหนก็ได้!</span>
+          </div>
+        )}
+
         <div className="mobile-table-piles">
           {/* Draw Pile (Left) */}
           <div

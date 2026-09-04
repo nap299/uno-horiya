@@ -77,6 +77,16 @@ export function GameSocketProvider({ children }) {
           case 'REVERSE':
             sound.playReverse();
             break;
+          case 'DRAW_EFFECT':
+            if (newGameState.spellEffect.count >= 4) {
+              sound.playSupernova();
+            } else {
+              sound.playLightning();
+            }
+            break;
+          case 'ABSORB_PENALTY':
+            sound.playUnoPenalty();
+            break;
           case 'LIGHTNING':
             sound.playLightning();
             break;

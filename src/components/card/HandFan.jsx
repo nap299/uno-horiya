@@ -93,18 +93,38 @@ export default function HandFan({
     }
   }
 
-  // Auto-group same value cards together: all matching numbers go together!
+  // Only number cards (0 - 9) are allowed to be played in multiples
+  const isPlayableAsMultiple = (c) => c && c.type === 'number' && typeof c.value === 'number' && c.value >= 0 && c.value <= 9;
+
+  // Auto-group same value cards together: all matching numbers (0-9) go together!
   const handleCardTap = (card, playable) => {
+    const isMultiAllowed = isPlayableAsMultiple(card);
+
+    if (!isMultiAllowed) {
+      if (selectedCardIds.length === 1 && selectedCardIds[0] === card.id) {
+        // Tapped again -> play it if directly playable
+        if (canPlayCard(card, topCard, activeColor, stackedDrawCount, rules)) {
+          sound.playCard(card.color);
+          onPlayCard(card);
+          setSelectedCardIds([]);
+          draggedComboRef.current = [];
+        }
+      } else {
+        setSelectedCardIds([card.id]);
+        draggedComboRef.current = [card];
+        sound.playCard(card.color);
+      }
+      return;
+    }
+
     const currentSelectedCards = selectedCardIds.map(id => hand.find(c => c.id === id)).filter(Boolean);
     const firstSelected = currentSelectedCards[0];
 
-    const isSameGroup = (firstSelected && card.value !== undefined && card.value === firstSelected.value);
+    const isSameGroup = (firstSelected && isPlayableAsMultiple(firstSelected) && card.value === firstSelected.value);
 
     if (!isSameGroup) {
-      // Auto-select ALL matching cards in hand sharing this number/value!
-      const matchingCards = (card.value !== undefined)
-        ? hand.filter(c => c.value === card.value)
-        : [card];
+      // Auto-select ALL matching cards in hand sharing this number 0-9!
+      const matchingCards = hand.filter(c => isPlayableAsMultiple(c) && c.value === card.value);
 
       if (matchingCards.length > 1) {
         // Put the tapped card at the end of the array so it is on TOP (determining color)
@@ -157,21 +177,19 @@ export default function HandFan({
     setDraggingCardId(card.id);
     setDragOffset({ x: 0, y: 0 });
 
-    // Determine the combo cards immediately and synchronously:
-    let combo = [];
-    if (selectedCardIds.includes(card.id) && selectedCardIds.length > 1) {
-      const existing = selectedCardIds.map(id => hand.find(c => c.id === id)).filter(Boolean);
-      combo = [...existing.filter(c => c.id !== card.id), card];
-    } else if (card.value !== undefined) {
-      const sameVal = hand.filter(c => c.value === card.value);
-      if (sameVal.length > 1) {
-        // Put the card being dragged at the end so it is on TOP!
-        combo = [...sameVal.filter(c => c.id !== card.id), card];
+    const isMultiAllowed = isPlayableAsMultiple(card);
+    let combo = [card];
+
+    if (isMultiAllowed) {
+      if (selectedCardIds.includes(card.id) && selectedCardIds.length > 1) {
+        const existing = selectedCardIds.map(id => hand.find(c => c.id === id)).filter(Boolean);
+        combo = [...existing.filter(c => c.id !== card.id), card];
       } else {
-        combo = [card];
+        const sameVal = hand.filter(c => isPlayableAsMultiple(c) && c.value === card.value);
+        if (sameVal.length > 1) {
+          combo = [...sameVal.filter(c => c.id !== card.id), card];
+        }
       }
-    } else {
-      combo = [card];
     }
 
     draggedComboRef.current = combo;
@@ -207,9 +225,9 @@ export default function HandFan({
       // Dragged up > 35px OR flicked up > 20px
       const isSwipeUp = rawDy < -35 || lastClampedY < -35 || (rawDy < -20 && dt < 350);
 
-      const cardsToPlay = (draggedComboRef.current && draggedComboRef.current.length > 0)
+      const cardsToPlay = (isMultiAllowed && draggedComboRef.current && draggedComboRef.current.length > 0)
         ? draggedComboRef.current
-        : (card.value !== undefined ? [...hand.filter(c => c.value === card.value && c.id !== card.id), card] : [card]);
+        : [card];
 
       // Check if the combo can be played: at least one card must match topCard / activeColor
       const canPlayCombo = cardsToPlay.some(c =>
@@ -279,8 +297,10 @@ export default function HandFan({
         <div className="pro-fan-row">
           {hand.map((card, idx) => {
             const isCardDirectlyPlayable = canPlayCard(card, topCard, activeColor, stackedDrawCount, rules);
-            const hasPlayableSibling = (card.value !== undefined) && hand.some(other =>
+            const isMultiAllowed = isPlayableAsMultiple(card);
+            const hasPlayableSibling = isMultiAllowed && hand.some(other =>
               other.id !== card.id &&
+              isPlayableAsMultiple(other) &&
               other.value === card.value &&
               canPlayCard(other, topCard, activeColor, stackedDrawCount, rules)
             );

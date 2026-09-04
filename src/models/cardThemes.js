@@ -66,6 +66,19 @@ export const ELEMENT_THEMES = {
     iconKey: 'celestial',
     rune: 'ᚨ',
     description: 'สมดุลแห่งจักรวาล'
+  },
+  any: {
+    name: 'ลงสีไหนก็ได้ (Any Color)',
+    element: 'มิติกาลเวลาไร้ขอบเขต',
+    elementEn: 'Chrono Rift (Any Color)',
+    primary: '#8B5CF6',
+    secondary: '#A78BFA',
+    dark: '#2E1065',
+    glow: 'rgba(139, 92, 246, 0.85)',
+    border: '#A78BFA',
+    iconKey: 'reverse',
+    rune: '⇄',
+    description: 'สามารถลงการ์ดสีไหนก็ได้'
   }
 };
 

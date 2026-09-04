@@ -1658,6 +1658,25 @@ body {
   z-index: 20;
 }
 
+.mobile-any-color-banner {
+  position: absolute;
+  top: -32px;
+  background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
+  border: 1.5px solid #C084FC;
+  color: #FFF;
+  padding: 4px 16px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-family: var(--font-rune);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 0 16px rgba(139, 92, 246, 0.85), 0 4px 14px rgba(0, 0, 0, 0.75);
+  z-index: 20;
+  letter-spacing: 0.5px;
+}
+
 .mobile-table-piles {
   display: flex;
   align-items: center;

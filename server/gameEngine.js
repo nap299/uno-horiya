@@ -107,6 +107,11 @@ export function canPlayCard(card, topCard, activeColor, stackedDrawCount = 0, ru
     return false;
   }
 
+  // Turn following Reverse allows ANY color to be played!
+  if (activeColor === 'any' || topCard.type === CARD_TYPES.REVERSE) {
+    return true;
+  }
+
   if (card.type === CARD_TYPES.WILD || card.type === CARD_TYPES.WILD_DRAW4) {
     return true;
   }
@@ -165,6 +170,7 @@ export function initializeGame(players, options = {}) {
     if (players.length === 2) {
       currentTurnIndex = 1;
     }
+    activeColor = 'any';
   } else if (topCard.type === CARD_TYPES.SKIP) {
     currentTurnIndex = 1 % players.length;
   } else if (topCard.type === CARD_TYPES.DRAW2) {

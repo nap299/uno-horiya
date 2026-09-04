@@ -292,8 +292,12 @@ export class RoomManager {
       cardsToPlay.push(found);
     }
 
-    // If multiple cards, ensure they all share the same number/value!
+    // If multiple cards, ensure they are strictly NUMBER cards (0 - 9) and share the same value!
     if (cardsToPlay.length > 1) {
+      const isNumberCard = (c) => c.type === CARD_TYPES.NUMBER && typeof c.value === 'number' && c.value >= 0 && c.value <= 9;
+      if (!cardsToPlay.every(isNumberCard)) {
+        return { error: "การ์ดที่ไม่ใช่ตัวเลข 0-9 ไม่สามารถลงมากกว่า 1 ใบได้!" };
+      }
       const firstVal = cardsToPlay[0].value;
       const allSameValue = cardsToPlay.every(c => c.value === firstVal);
       if (!allSameValue) {
@@ -330,6 +334,8 @@ export class RoomManager {
         chosenColor = COLORS[0];
       }
       gameState.activeColor = chosenColor;
+    } else if (lastCard.type === CARD_TYPES.REVERSE) {
+      gameState.activeColor = 'any';
     } else {
       gameState.activeColor = lastCard.color;
     }
@@ -363,28 +369,27 @@ export class RoomManager {
     const numPlayers = gameState.players.length;
 
     if (lastCard.type === CARD_TYPES.SKIP) {
-      skipCount = 1 + cardsToPlay.length;
+      skipCount = 2;
       spellEffect = { type: 'FREEZE', target: gameState.players[(gameState.currentTurnIndex + gameState.direction + numPlayers) % numPlayers]?.name || 'Skipped!' };
       gameState.actionLog.unshift({
-        text: `${currentPlayer.name} cast ${cardsToPlay.length}x Frost Stasis!`,
+        text: `${currentPlayer.name} cast Frost Stasis!`,
         timestamp: Date.now()
       });
     } else if (lastCard.type === CARD_TYPES.REVERSE) {
-      if (cardsToPlay.length % 2 !== 0) {
-        gameState.direction *= -1;
-      }
+      gameState.direction *= -1;
       if (numPlayers === 2) {
         skipCount = 2;
       }
+      gameState.activeColor = 'any';
       spellEffect = { type: 'REVERSE', direction: gameState.direction };
       gameState.actionLog.unshift({
         text: `${currentPlayer.name} opened Chrono Rift! Flow reversed!`,
         timestamp: Date.now()
       });
     } else if (lastCard.type === CARD_TYPES.DRAW2) {
-      const addedCount = 2 * cardsToPlay.length;
+      const addedCount = 2;
       if (gameState.rules.stacking) {
-        gameState.stackedDrawCount += addedCount;
+        gameState.stackedDrawCount = Math.min(10, gameState.stackedDrawCount + addedCount);
         skipCount = 1;
       } else {
         const nextIdx = (gameState.currentTurnIndex + gameState.direction + numPlayers) % numPlayers;
@@ -392,15 +397,20 @@ export class RoomManager {
         this.giveCards(gameState, targetPlayer.id, addedCount);
         skipCount = 2;
       }
-      spellEffect = { type: 'LIGHTNING', count: addedCount };
+      spellEffect = {
+        type: 'DRAW_EFFECT',
+        count: gameState.stackedDrawCount || addedCount,
+        cardType: 'draw2',
+        color: lastCard.color
+      };
       gameState.actionLog.unshift({
-        text: `${currentPlayer.name} cast ${cardsToPlay.length}x Twin Lightning (+${addedCount}) [Stack: ${gameState.stackedDrawCount}]!`,
+        text: `${currentPlayer.name} cast Twin Lightning (+2) [Stack: +${gameState.stackedDrawCount}]!`,
         timestamp: Date.now()
       });
     } else if (lastCard.type === CARD_TYPES.WILD_DRAW4) {
-      const addedCount = 4 * cardsToPlay.length;
+      const addedCount = 4;
       if (gameState.rules.stacking) {
-        gameState.stackedDrawCount += addedCount;
+        gameState.stackedDrawCount = Math.min(10, gameState.stackedDrawCount + addedCount);
         skipCount = 1;
       } else {
         const nextIdx = (gameState.currentTurnIndex + gameState.direction + numPlayers) % numPlayers;
@@ -408,9 +418,14 @@ export class RoomManager {
         this.giveCards(gameState, targetPlayer.id, addedCount);
         skipCount = 2;
       }
-      spellEffect = { type: 'SUPERNOVA', color: chosenColor, count: addedCount };
+      spellEffect = {
+        type: 'DRAW_EFFECT',
+        count: gameState.stackedDrawCount || addedCount,
+        cardType: 'wild_draw4',
+        color: chosenColor
+      };
       gameState.actionLog.unshift({
-        text: `${currentPlayer.name} summoned Supernova (+${addedCount}) into ${chosenColor.toUpperCase()}!`,
+        text: `${currentPlayer.name} summoned Supernova (+4) into ${chosenColor.toUpperCase()} [Stack: +${gameState.stackedDrawCount}]!`,
         timestamp: Date.now()
       });
     } else if (lastCard.type === CARD_TYPES.WILD) {
@@ -467,7 +482,7 @@ export class RoomManager {
     }
 
     if (gameState.stackedDrawCount > 0) {
-      const count = gameState.stackedDrawCount;
+      const count = Math.min(10, gameState.stackedDrawCount);
       const drawnCards = this.giveCards(gameState, playerId, count);
       gameState.stackedDrawCount = 0;
 
@@ -480,7 +495,7 @@ export class RoomManager {
       gameState.currentTurnIndex = (gameState.currentTurnIndex + gameState.direction + numPlayers) % numPlayers;
 
       this.broadcastGameState(roomCode, {
-        spellEffect: { type: 'ABSORB_PENALTY', count }
+        spellEffect: { type: 'ABSORB_PENALTY', count, target: currentPlayer.name }
       });
       this.startTurnTimer(roomCode);
       this.checkBotTurn(roomCode);
