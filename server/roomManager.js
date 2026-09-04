@@ -381,9 +381,13 @@ export class RoomManager {
 
     if (lastCard.type === CARD_TYPES.SKIP) {
       skipCount = 2;
-      spellEffect = { type: 'FREEZE', target: gameState.players[(gameState.currentTurnIndex + gameState.direction + numPlayers) % numPlayers]?.name || 'Skipped!' };
+      spellEffect = {
+        type: 'FREEZE',
+        color: lastCard.color,
+        target: gameState.players[(gameState.currentTurnIndex + gameState.direction + numPlayers) % numPlayers]?.name || 'Skipped!'
+      };
       gameState.actionLog.unshift({
-        text: `${currentPlayer.name} cast Frost Stasis!`,
+        text: `${currentPlayer.name} cast Frost Stasis (${lastCard.color})!`,
         timestamp: Date.now()
       });
     } else if (lastCard.type === CARD_TYPES.REVERSE) {

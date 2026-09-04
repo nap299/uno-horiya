@@ -1,6 +1,5 @@
 // src/components/effects/SpellEffect.jsx - Pure Graphical Effect Banners
 import React from 'react';
-import { Ban } from 'lucide-react';
 import fireEffect from '../../assets/effects/fire.png';
 import flashEffect from '../../assets/effects/flash.png';
 import plantEffect from '../../assets/effects/plant.png';
@@ -11,6 +10,10 @@ import draw4Effect from '../../assets/effects/+4.png';
 import draw6Effect from '../../assets/effects/+6.png';
 import draw8Effect from '../../assets/effects/+8.png';
 import draw10Effect from '../../assets/effects/+10.png';
+import redSkipEffect from '../../assets/effects/red_skip.png';
+import greenSkipEffect from '../../assets/effects/green_skip.png';
+import blueSkipEffect from '../../assets/effects/blue_skip.png';
+import yellowSkipEffect from '../../assets/effects/yellow_skip.png';
 
 const ELEMENT_EFFECT_MAP = {
   ruby: fireEffect,
@@ -21,6 +24,17 @@ const ELEMENT_EFFECT_MAP = {
   green: plantEffect,
   sapphire: waterEffect,
   blue: waterEffect
+};
+
+const SKIP_EFFECT_MAP = {
+  ruby: redSkipEffect,
+  red: redSkipEffect,
+  emerald: greenSkipEffect,
+  green: greenSkipEffect,
+  sapphire: blueSkipEffect,
+  blue: blueSkipEffect,
+  amber: yellowSkipEffect,
+  yellow: yellowSkipEffect
 };
 
 function getDrawImage(count) {
@@ -79,17 +93,14 @@ export default function SpellEffect({ spell }) {
         </div>
       )}
 
-      {/* 4. Freeze / Skip Banner */}
+      {/* 4. Freeze / Skip Banner by Color (red_skip, green_skip, blue_skip, yellow_skip) - Pure Image */}
       {type === 'FREEZE' && (
-        <div className="spell-power-banner banner-frost animate-slide-down">
-          <div className="banner-icon-block block-frost">
-            <Ban size={22} className="icon-white" />
-          </div>
-          <div className="banner-text-block">
-            <span className="banner-badge-tag">การ์ดคำสั่ง</span>
-            <h3 className="banner-title">แช่แข็ง (ข้ามเทิร์น)</h3>
-            <p className="banner-desc">{target ? `${target} โดนข้ามเทิร์น!` : 'ข้ามเทิร์นผู้เล่นถัดไป!'}</p>
-          </div>
+        <div className="elemental-banner-wrapper">
+          <img
+            src={SKIP_EFFECT_MAP[color?.toLowerCase()] || blueSkipEffect}
+            alt="ข้ามเทิร์น"
+            className="elemental-banner-img"
+          />
         </div>
       )}
     </div>
