@@ -41,7 +41,7 @@ export default function RoomPage({ onOpenProfile }) {
   const myPlayer = players.find(p => p.id === myId);
   const isReady = myPlayer?.isReady || isHost;
 
-  const maxPlayers = 5;
+  const maxPlayers = 4;
   const canStart = isHost && players.length >= 2;
 
   const handleCopyLink = () => {
