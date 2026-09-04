@@ -1,4 +1,4 @@
-// src/components/effects/SpellEffect.jsx - Modern Non-Obstructive Power Banner (Thai UI)
+// src/components/effects/SpellEffect.jsx - Pure Graphical Effect Banners
 import React from 'react';
 import { Ban } from 'lucide-react';
 import fireEffect from '../../assets/effects/fire.png';
@@ -11,17 +11,6 @@ import draw4Effect from '../../assets/effects/+4.png';
 import draw6Effect from '../../assets/effects/+6.png';
 import draw8Effect from '../../assets/effects/+8.png';
 import draw10Effect from '../../assets/effects/+10.png';
-
-const COLOR_NAMES_TH = {
-  ruby: 'สีแดง',
-  red: 'สีแดง',
-  sapphire: 'สีน้ำเงิน',
-  blue: 'สีน้ำเงิน',
-  emerald: 'สีเขียว',
-  green: 'สีเขียว',
-  amber: 'สีเหลือง',
-  yellow: 'สีเหลือง'
-};
 
 const ELEMENT_EFFECT_MAP = {
   ruby: fireEffect,
@@ -46,7 +35,7 @@ function getDrawImage(count) {
 export default function SpellEffect({ spell }) {
   if (!spell) return null;
 
-  const { type, color, target, count, cardType } = spell;
+  const { type, color, target, count } = spell;
 
   const isDrawEffect = type === 'DRAW_EFFECT' || type === 'LIGHTNING' || type === 'SUPERNOVA' || type === 'ABSORB_PENALTY';
   const drawImage = isDrawEffect ? getDrawImage(count) : null;
@@ -57,7 +46,7 @@ export default function SpellEffect({ spell }) {
 
   return (
     <div className="spell-banner-anchor">
-      {/* 1. Draw Stacking & Forced Draw Penalty Banners (+2, +4, +6, +8, +10) */}
+      {/* 1. Draw Stacking & Forced Draw Penalty Banners (+2, +4, +6, +8, +10) - Pure Image */}
       {isDrawEffect && drawImage && (
         <div className="elemental-banner-wrapper">
           <img
@@ -65,20 +54,10 @@ export default function SpellEffect({ spell }) {
             alt={`+${drawCount}`}
             className="elemental-banner-img"
           />
-          {type === 'ABSORB_PENALTY' && (
-            <div className="supernova-badge animate-bounce" style={{ background: 'linear-gradient(135deg, #DC2626 0%, #7F1D1D 100%)' }}>
-              {target ? `${target} โดนจั่ว ${drawCount} ใบ!` : `บังคับจั่ว ${drawCount} ใบ!`}
-            </div>
-          )}
-          {type !== 'ABSORB_PENALTY' && cardType === 'wild_draw4' && color && (
-            <div className="supernova-badge animate-bounce" style={{ background: 'linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)' }}>
-              เลือกสี: {COLOR_NAMES_TH[color] || color}
-            </div>
-          )}
         </div>
       )}
 
-      {/* 2. Reverse / Time Reverse Banner (swift.png) */}
+      {/* 2. Reverse / Time Reverse Banner (swift.png) - Pure Image */}
       {type === 'REVERSE' && (
         <div className="elemental-banner-wrapper">
           <img
@@ -86,13 +65,10 @@ export default function SpellEffect({ spell }) {
             alt="ย้อนกลับทิศทาง"
             className="elemental-banner-img"
           />
-          <div className="supernova-badge animate-bounce" style={{ background: 'linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)' }}>
-            เทิร์นถัดไปลงสีไหนก็ได้!
-          </div>
         </div>
       )}
 
-      {/* 3. Wild Color Shift Banner (fire, flash, plant, water) */}
+      {/* 3. Wild Color Shift Banner (fire, flash, plant, water) - Pure Image */}
       {isWildShift && wildEffectImg && (
         <div className="elemental-banner-wrapper">
           <img
@@ -100,9 +76,6 @@ export default function SpellEffect({ spell }) {
             alt={color || 'element'}
             className="elemental-banner-img"
           />
-          <div className="supernova-badge animate-bounce">
-            เปลี่ยนเป็น: {COLOR_NAMES_TH[color] || color}
-          </div>
         </div>
       )}
 
