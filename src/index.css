@@ -61,11 +61,6 @@ html, body, #root {
 
 body {
   background-color: #070B14;
-  background-image: url('./bg.jpeg'), url('/bg.jpeg');
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;
-  background-attachment: fixed;
   overscroll-behavior-y: none;
 }
 
@@ -88,11 +83,7 @@ body {
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
-  background-image: url('./bg.jpeg'), url('/bg.jpeg');
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;
-  background-attachment: fixed;
+  background: radial-gradient(circle at 50% 20%, #151b2b 0%, #070B14 100%);
 }
 
 .global-app-header {
@@ -1242,11 +1233,7 @@ body {
   overflow: hidden;
   padding: 6px 10px 10px;
   padding-bottom: max(10px, env(safe-area-inset-bottom));
-  background-color: #0A369D;
-  background-image: url('./arena.jpg'), url('/arena.jpg');
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;
+  background: radial-gradient(circle at 50% 40%, #162447 0%, #070B14 100%);
 }
 
 .mobile-top-hud {
