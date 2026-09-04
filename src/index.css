@@ -1641,40 +1641,57 @@ body {
   filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.8));
 }
 
-.mobile-stacked-banner {
+/* Stacked Draw Penalty directly on the face-down card deck (หลังการ์ดที่คว่ำ) */
+.deck-stacked-draw-badge {
   position: absolute;
-  top: -32px;
-  background: #D90429;
-  border: 1px solid #EF233C;
-  color: #FFF;
-  padding: 3px 14px;
-  border-radius: 12px;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+  border: 1.5px solid #FCA5A5;
+  color: #FFFFFF;
+  padding: 3px 10px;
+  border-radius: 9999px;
   font-size: 0.76rem;
-  font-weight: 600;
+  font-weight: 800;
+  font-family: var(--font-rune);
   display: flex;
   align-items: center;
   gap: 4px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.75);
-  z-index: 20;
+  box-shadow: 0 0 16px rgba(220, 38, 38, 0.95), 0 4px 10px rgba(0, 0, 0, 0.85);
+  z-index: 25;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+  pointer-events: none;
 }
 
-.mobile-any-color-banner {
+.mobile-draw-deck.deck-has-penalty .fantasy-card {
+  border-color: #EF4444 !important;
+  box-shadow: 0 0 0 2.5px #EF4444, 0 0 22px rgba(239, 68, 68, 0.85), 0 8px 24px rgba(0, 0, 0, 0.9) !important;
+  animation: pulseUrgent 0.9s infinite alternate;
+}
+
+/* Any Color Free Play Indicator directly on the discard pile */
+.discard-any-color-badge {
   position: absolute;
-  top: -32px;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
   background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
-  border: 1.5px solid #C084FC;
-  color: #FFF;
-  padding: 4px 16px;
-  border-radius: 12px;
-  font-size: 0.8rem;
+  border: 1.5px solid #E9D5FF;
+  color: #FFFFFF;
+  padding: 3px 12px;
+  border-radius: 9999px;
+  font-size: 0.72rem;
   font-weight: 700;
   font-family: var(--font-rune);
   display: flex;
   align-items: center;
-  gap: 6px;
-  box-shadow: 0 0 16px rgba(139, 92, 246, 0.85), 0 4px 14px rgba(0, 0, 0, 0.75);
-  z-index: 20;
+  box-shadow: 0 0 16px rgba(139, 92, 246, 0.9), 0 4px 10px rgba(0, 0, 0, 0.75);
+  z-index: 25;
+  white-space: nowrap;
   letter-spacing: 0.5px;
+  pointer-events: none;
 }
 
 .mobile-table-piles {

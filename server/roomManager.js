@@ -242,13 +242,14 @@ export class RoomManager {
       this.io.to(roomCode).emit('TIMER_TICK', { timeRemaining: room.timeRemaining });
 
       if (room.timeRemaining <= 0) {
+        this.stopTurnTimer(room);
         this.handleTimeout(roomCode);
       }
     }, 1000);
   }
 
   stopTurnTimer(room) {
-    if (room.turnTimerInterval) {
+    if (room && room.turnTimerInterval) {
       clearInterval(room.turnTimerInterval);
       room.turnTimerInterval = null;
     }
@@ -258,15 +259,25 @@ export class RoomManager {
     const room = this.getRoom(roomCode);
     if (!room || !room.gameState) return;
 
+    this.stopTurnTimer(room);
+
     const currentPlayer = room.gameState.players[room.gameState.currentTurnIndex];
     if (!currentPlayer) return;
 
     room.gameState.actionLog.unshift({
-      text: `${currentPlayer.name} ran out of time and drew a rune!`,
+      text: `${currentPlayer.name} ran out of time and drew automatically!`,
       timestamp: Date.now()
     });
 
-    this.drawCard(roomCode, currentPlayer.id, true);
+    const result = this.drawCard(roomCode, currentPlayer.id, true);
+    if (result && result.error) {
+      console.warn(`[Auto-draw timeout warning]:`, result.error);
+      const numPlayers = room.gameState.players.length;
+      room.gameState.currentTurnIndex = (room.gameState.currentTurnIndex + room.gameState.direction + numPlayers) % numPlayers;
+      this.broadcastGameState(roomCode);
+      this.startTurnTimer(roomCode);
+      this.checkBotTurn(roomCode);
+    }
   }
 
   playCard(roomCode, playerId, cardId, chosenColor) {

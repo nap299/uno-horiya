@@ -1,5 +1,5 @@
 // src/pages/GamePage.jsx - HORIYA 5-Player Mobile Arena with Circular Vortex Table & 3D Flow Arrows
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useGameSocket } from '../context/GameSocketContext';
 import { useAuth } from '../context/AuthContext';
 import CardComponent from '../components/card/CardComponent';
@@ -169,6 +169,19 @@ export default function GamePage() {
     if (isMyTurn) drawCard();
   };
 
+  // Auto-draw when time runs out on the player's turn
+  const hasAutoDrawnRef = useRef(false);
+  useEffect(() => {
+    if (isMyTurn && timeRemaining != null && timeRemaining <= 0) {
+      if (!hasAutoDrawnRef.current) {
+        hasAutoDrawnRef.current = true;
+        handleDraw();
+      }
+    } else {
+      hasAutoDrawnRef.current = false;
+    }
+  }, [timeRemaining, isMyTurn]);
+
   return (
     <div
       className="mobile-arena-container"
@@ -225,25 +238,10 @@ export default function GamePage() {
           <TurnFlowArrows direction={gameState.direction || 1} />
         </div>
 
-        {/* Stacked Draw Penalty Alert */}
-        {gameState.stackedDrawCount > 0 && (
-          <div className="mobile-stacked-banner animate-bounce">
-            <ShieldAlert size={14} />
-            <span>โดนซ้อนไพ่ +{gameState.stackedDrawCount} ใบ!</span>
-          </div>
-        )}
-
-        {/* Any Color Free Play Indicator after Reverse */}
-        {activeColor === 'any' && (
-          <div className="mobile-any-color-banner animate-bounce">
-            <span>ลงสีไหนก็ได้!</span>
-          </div>
-        )}
-
         <div className="mobile-table-piles">
-          {/* Draw Pile (Left) */}
+          {/* Draw Pile (Left - Face-Down Deck) */}
           <div
-            className={`mobile-draw-deck ${isMyTurn ? 'deck-active' : ''} ${mustDraw ? 'deck-must-draw' : ''}`}
+            className={`mobile-draw-deck ${isMyTurn ? 'deck-active' : ''} ${mustDraw ? 'deck-must-draw' : ''} ${gameState.stackedDrawCount > 0 ? 'deck-has-penalty' : ''}`}
             onClick={handleDraw}
           >
             <div className="deck-shadow-3" />
@@ -258,10 +256,24 @@ export default function GamePage() {
               <Layers size={10} />
               <span>{gameState.drawPileCount || 90}</span>
             </div>
+
+            {/* Stacked Draw Penalty Alert: Rendered directly on the face-down deck */}
+            {gameState.stackedDrawCount > 0 && (
+              <div className="deck-stacked-draw-badge animate-bounce">
+                <ShieldAlert size={13} />
+                <span>+{gameState.stackedDrawCount} ใบ</span>
+              </div>
+            )}
           </div>
 
           {/* Discard Pile (Center) */}
           <div className="mobile-discard-pile">
+            {/* Any Color Free Play Indicator after Reverse */}
+            {activeColor === 'any' && (
+              <div className="discard-any-color-badge animate-bounce">
+                <span>ลงสีไหนก็ได้</span>
+              </div>
+            )}
             {topCard ? (
               <div className="mobile-top-card animate-card-drop">
                 <CardComponent card={topCard} size="md" showGlow={false} />
