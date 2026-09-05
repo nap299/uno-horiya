@@ -442,11 +442,11 @@ body {
   border: 1px solid #9D4EDD;
 }
 
-/* 2. Duelist Center Character Showcase (Senior Game UX/UI, No Stats) */
+/* 2. Duelist Center Character Showcase (Senior Game UX/UI, Silver Border, No Stats) */
 .duelist-hero-showcase {
   position: relative;
   background: linear-gradient(135deg, rgba(20, 27, 44, 0.9) 0%, rgba(11, 15, 24, 0.95) 100%);
-  border: 1.5px solid rgba(255, 215, 0, 0.25);
+  border: 1.5px solid rgba(203, 213, 225, 0.25);
   border-radius: 20px;
   padding: 16px 20px;
   margin: 4px 0 10px;
@@ -464,14 +464,14 @@ body {
   left: 15%;
   width: 140px;
   height: 140px;
-  background: radial-gradient(circle, rgba(255, 215, 0, 0.12) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(226, 232, 240, 0.1) 0%, transparent 70%);
   pointer-events: none;
 }
 
 .duelist-hero-showcase:hover {
-  border-color: rgba(255, 215, 0, 0.55);
+  border-color: rgba(226, 232, 240, 0.6);
   transform: translateY(-2px);
-  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.7), 0 0 24px rgba(255, 215, 0, 0.2);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.7), 0 0 24px rgba(226, 232, 240, 0.22);
 }
 
 .duelist-hero-showcase:active {
@@ -495,7 +495,7 @@ body {
   position: absolute;
   inset: -6px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.35) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(203, 213, 225, 0.3) 0%, transparent 70%);
   animation: pulseGlow 3s infinite ease-in-out;
   pointer-events: none;
 }
@@ -506,8 +506,8 @@ body {
   height: 74px;
   border-radius: 50%;
   background: #0B0E17;
-  border: 2.5px solid #FFD700;
-  box-shadow: 0 0 16px rgba(255, 215, 0, 0.4), inset 0 2px 6px rgba(0, 0, 0, 0.8);
+  border: 2.5px solid #E2E8F0;
+  box-shadow: 0 0 16px rgba(226, 232, 240, 0.45), inset 0 2px 6px rgba(0, 0, 0, 0.8);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -537,26 +537,6 @@ body {
   z-index: 3;
 }
 
-.duelist-custom-hint-badge {
-  position: absolute;
-  top: -2px;
-  right: -2px;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: #192233;
-  border: 1.5px solid rgba(255, 215, 0, 0.65);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
-  z-index: 4;
-}
-
-.sparkle-gold {
-  color: #FFD700;
-}
-
 .duelist-hero-meta {
   display: flex;
   flex-direction: column;
@@ -581,19 +561,6 @@ body {
   margin: 0;
   line-height: 1.1;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-}
-
-.duelist-hero-level {
-  font-family: var(--font-rune);
-  font-size: 0.72rem;
-  font-weight: 900;
-  background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%);
-  border: 1px solid #FDE68A;
-  color: #FFFFFF;
-  padding: 2px 8px;
-  border-radius: 6px;
-  letter-spacing: 0.5px;
-  box-shadow: 0 2px 6px rgba(217, 119, 6, 0.4);
 }
 
 .duelist-hero-title-box {

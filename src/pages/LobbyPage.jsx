@@ -110,15 +110,11 @@ export default function LobbyPage({ onOpenProfile, onOpenRules }) {
               )}
               <span className="duelist-online-gem" title="ออนไลน์" />
             </div>
-            <div className="duelist-custom-hint-badge" title="แก้ไข">
-              <Sparkles size={13} className="sparkle-gold" />
-            </div>
           </div>
 
           <div className="duelist-hero-meta">
             <div className="duelist-hero-name-row">
               <h2 className="duelist-hero-name">{user?.name || 'ผู้เล่น'}</h2>
-              <span className="duelist-hero-level">LV.1</span>
             </div>
             <div className="duelist-hero-title-box">
               <span className="title-rune-glyph">✦</span>
@@ -153,11 +149,11 @@ export default function LobbyPage({ onOpenProfile, onOpenRules }) {
           </div>
 
           <p className="mode-desc">
-            สร้างห้องเล่นทันที รองรับ 2-8 คน ชวนเพื่อนด้วยลิงก์ หรือเพิ่ม AI บอทได้ทันที
+            สร้างห้องเล่นทันที รองรับ 2-4 คน ชวนเพื่อนด้วยลิงก์ หรือเพิ่ม AI บอทได้ทันที
           </p>
 
           <div className="mode-features-list">
-            <span className="feature-pill"><Users size={12} /> 2-8 ผู้เล่น</span>
+            <span className="feature-pill"><Users size={12} /> 2-4 ผู้เล่น</span>
             <span className="feature-pill"><Bot size={12} /> มีบอท AI</span>
             <span className="feature-pill"><Zap size={12} /> ซ้อนไพ่ +2/+4</span>
           </div>
@@ -281,7 +277,7 @@ export default function LobbyPage({ onOpenProfile, onOpenRules }) {
           <form onSubmit={handleJoin} className="join-form-row">
             <input
               type="text"
-              placeholder="กรอกรหัสห้อง เช่น HORI-409"
+              placeholder="กรอกรหัสห้อง..."
               className="solid-room-input"
               value={roomCodeInput}
               onChange={(e) => setRoomCodeInput(e.target.value.toUpperCase())}
