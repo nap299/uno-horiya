@@ -81,7 +81,7 @@ export default function PlayerAvatar({
           {player.avatar && player.avatar.startsWith('http') ? (
             <img src={player.avatar} alt={player.name} className="avatar-img" />
           ) : (
-            <AvatarIcon iconId={player.avatar || 'flame'} size={22} />
+            <AvatarIcon iconId={player.avatar || 'flame'} size={34} />
           )}
 
           {player.isHost && (

@@ -2775,11 +2775,24 @@ body {
   justify-content: center;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
   transition: transform 0.15s ease;
+  overflow: hidden;
+}
+
+.avatar-icon-img {
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+  transition: transform 0.2s ease, filter 0.2s ease;
 }
 
 .avatar-preset-btn:hover .preset-icon-box,
 .avatar-preset-btn.preset-selected .preset-icon-box {
   transform: scale(1.08);
+}
+
+.avatar-preset-btn:hover .avatar-icon-img {
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.6));
 }
 
 .preset-name {

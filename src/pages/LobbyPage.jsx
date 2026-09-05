@@ -108,7 +108,7 @@ export default function LobbyPage({ onOpenProfile, onOpenRules }) {
             {user?.avatar && user.avatar.startsWith('http') ? (
               <img src={user.avatar} alt={user.name} />
             ) : (
-              <AvatarIcon iconId={user?.avatar || 'flame'} size={22} />
+              <AvatarIcon iconId={user?.avatar || 'flame'} size={34} />
             )}
             <span className="duelist-online-dot" />
           </div>

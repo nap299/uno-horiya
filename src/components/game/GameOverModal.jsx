@@ -51,7 +51,7 @@ export default function GameOverModal({ winner, isSelfWinner, onPlayAgain, onLea
             {winner?.avatar && winner.avatar.startsWith('http') ? (
               <img src={winner.avatar} alt={winner.name} className="podium-avatar-img" />
             ) : (
-              <AvatarIcon iconId={winner?.avatar || 'flame'} size={36} />
+              <AvatarIcon iconId={winner?.avatar || 'flame'} size={54} />
             )}
           </div>
           <h2 className="winner-name">{winner?.name}</h2>

@@ -157,7 +157,7 @@ export default function RoomPage({ onOpenProfile }) {
                 {currentAvatar && currentAvatar.startsWith('http') ? (
                   <img src={currentAvatar} alt={currentName} className="pedestal-avatar-img" />
                 ) : (
-                  <AvatarIcon iconId={currentAvatar || 'flame'} size={24} />
+                  <AvatarIcon iconId={currentAvatar || 'flame'} size={38} />
                 )}
               </div>
 

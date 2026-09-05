@@ -112,7 +112,7 @@ export default function LoginModal({ onClose }) {
                       }}
                     >
                       <div className="preset-icon-box">
-                        <AvatarIcon iconId={preset.iconId} size={22} />
+                        <AvatarIcon iconId={preset.iconId} size={32} />
                       </div>
                       <span className="preset-name">{preset.name}</span>
                       {isSelected && <Check size={12} className="preset-check" />}
