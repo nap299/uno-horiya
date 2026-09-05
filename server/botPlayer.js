@@ -2,11 +2,14 @@
 import { canPlayCard, CARD_TYPES, COLORS } from './gameEngine.js';
 
 export const BOT_AVATARS = [
-  { name: 'Ignis', avatar: 'flame', color: 'ruby', title: 'Infernal Mage' },
-  { name: 'Frostina', avatar: 'frost', color: 'sapphire', title: 'Glacial Sorceress' },
-  { name: 'Sylva', avatar: 'leaf', color: 'emerald', title: 'Forest Warden' },
-  { name: 'Voltos', avatar: 'storm', color: 'amber', title: 'Stormcaller' },
-  { name: 'Astralis', avatar: 'void', color: 'celestial', title: 'Void Prophet' }
+  { name: 'เหมียวซ่า', avatar: 'cat', color: 'amber', title: 'แมวส้มจอมป่วน' },
+  { name: 'ตูบผู้ภักดี', avatar: 'dog', color: 'sapphire', title: 'หมาน้อยแสนรู้' },
+  { name: 'มังกรเพลิง', avatar: 'dragon', color: 'ruby', title: 'ราชามังกรโบราณ' },
+  { name: 'ฉลามคลั่ง', avatar: 'shark', color: 'sapphire', title: 'นักล่าใต้สมุทร' },
+  { name: 'กุ๊กไก่ไฟแรง', avatar: 'chicken', color: 'amber', title: 'ไก่ชนไร้พ่าย' },
+  { name: 'อสรพิษมรกต', avatar: 'snake', color: 'emerald', title: 'พญางูเงาพราย' },
+  { name: 'จิ้งจอกมายา', avatar: 'fox', color: 'ruby', title: 'จิ้งจอกเก้าหาง' },
+  { name: 'พยัคฆ์คำราม', avatar: 'tiger', color: 'celestial', title: 'เสือเจ้าป่า' }
 ];
 
 export function decideBotMove(gameState, botId) {

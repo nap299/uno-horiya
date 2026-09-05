@@ -140,13 +140,20 @@ export class RoomManager {
     if (!room || room.status !== 'LOBBY') return null;
     if (room.players.length >= 4) return null;
 
-    const botConfig = BOT_AVATARS[room.players.length % BOT_AVATARS.length];
+    // Pick a bot randomly from default presets, preferring avatars not already in room
+    const usedAvatars = new Set(room.players.map(p => p.avatar));
+    const usedNames = new Set(room.players.map(p => p.name));
+    const available = BOT_AVATARS.filter(b => !usedAvatars.has(b.avatar) && !usedNames.has(b.name));
+    const pool = available.length > 0 ? available : BOT_AVATARS;
+    const botConfig = pool[Math.floor(Math.random() * pool.length)];
+
     const botId = `bot_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`;
 
     const botPlayer = {
       id: botId,
-      name: `${botConfig.name}`,
+      name: botConfig.name,
       avatar: botConfig.avatar,
+      color: botConfig.color,
       isBot: true,
       isHost: false,
       isReady: true,
