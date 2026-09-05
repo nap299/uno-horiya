@@ -6,8 +6,8 @@ import { ELEMENT_THEMES, ACTION_SPELL_INFO } from '../../models/cardThemes';
 export function getCardTemplate(card, isBack = false) {
   if (isBack) {
     return {
-      image: './cardtemplate/cardback.png',
-      fallback: '/cardtemplate/cardback.png',
+      image: './cardtemplate/cardback.webp',
+      fallback: './cardtemplate/cardback.png',
       showCorners: false,
       symbol: ''
     };
@@ -15,8 +15,8 @@ export function getCardTemplate(card, isBack = false) {
 
   if (!card) {
     return {
-      image: './cardtemplate/cardback.png',
-      fallback: '/cardtemplate/cardback.png',
+      image: './cardtemplate/cardback.webp',
+      fallback: './cardtemplate/cardback.png',
       showCorners: false,
       symbol: ''
     };
@@ -25,8 +25,8 @@ export function getCardTemplate(card, isBack = false) {
   // 1. Wild Draw 4 (+4)
   if (card.type === 'wild_draw4') {
     return {
-      image: './cardtemplate/four.png',
-      fallback: '/cardtemplate/four.png',
+      image: './cardtemplate/four.webp',
+      fallback: './cardtemplate/four.png',
       showCorners: true,
       symbol: '+4'
     };
@@ -35,8 +35,8 @@ export function getCardTemplate(card, isBack = false) {
   // 2. Wild Color Change (No number)
   if (card.type === 'wild') {
     return {
-      image: './cardtemplate/color.png',
-      fallback: '/cardtemplate/color.png',
+      image: './cardtemplate/color.webp',
+      fallback: './cardtemplate/color.png',
       showCorners: false,
       symbol: ''
     };
@@ -45,24 +45,29 @@ export function getCardTemplate(card, isBack = false) {
   // 3. Reverse (Swift - No number)
   if (card.type === 'reverse') {
     return {
-      image: './cardtemplate/swift.png',
-      fallback: '/cardtemplate/swift.png',
+      image: './cardtemplate/swift.webp',
+      fallback: './cardtemplate/swift.png',
       showCorners: false,
       symbol: ''
     };
   }
 
   // 4. Colored Cards: red, green, blue, yellow
-  let imageFile = 'red.png';
+  let imageFile = 'red.webp';
+  let fallbackFile = 'red.png';
   const colorStr = (card.color || '').toLowerCase();
   if (colorStr === 'emerald' || colorStr === 'green') {
-    imageFile = 'green.png';
+    imageFile = 'green.webp';
+    fallbackFile = 'green.png';
   } else if (colorStr === 'sapphire' || colorStr === 'blue') {
-    imageFile = 'blue.png';
+    imageFile = 'blue.webp';
+    fallbackFile = 'blue.png';
   } else if (colorStr === 'amber' || colorStr === 'yellow' || colorStr === 'gold') {
-    imageFile = 'yellow.png';
+    imageFile = 'yellow.webp';
+    fallbackFile = 'yellow.png';
   } else {
-    imageFile = 'red.png';
+    imageFile = 'red.webp';
+    fallbackFile = 'red.png';
   }
 
   // Check if card is a skip / freeze card (ตัดข้ามเทิร์น / แช่แข็ง)
@@ -84,7 +89,7 @@ export function getCardTemplate(card, isBack = false) {
 
   return {
     image: `./cardtemplate/${imageFile}`,
-    fallback: `/cardtemplate/${imageFile}`,
+    fallback: `./cardtemplate/${fallbackFile}`,
     showCorners: hasCorners,
     symbol: symbol,
     isSkip: isSkip

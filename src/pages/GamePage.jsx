@@ -127,10 +127,10 @@ export default function GamePage() {
   );
   const mustDraw = isMyTurn && !hasPlayableCard;
 
-  // สถานะการเรียก UNO
+  // สถานะการเรียก UNO: ต้องเหลือการ์ดบนมือใบเดียวเท่านั้น ปุ่มถึงจะแสดงสีให้กด
   const myUnoState = gameState.playerCardCounts?.[myId] || { hasCalledUno: false, count: myHand.length };
-  const canCallUno = !myUnoState.hasCalledUno && (myHand.length <= 2 || myUnoState.mustCallUno);
-  const isUrgentUno = myHand.length <= 2 && !myUnoState.hasCalledUno;
+  const canCallUno = myHand.length === 1 && !myUnoState.hasCalledUno;
+  const isUrgentUno = myHand.length === 1 && !myUnoState.hasCalledUno;
 
   // เรียงคู่ต่อสู้ให้ขึ้นอยู่กับตำแหน่งของตัวเอง (สูงสุด 4 คนรอบโต๊ะ)
   const reorderedOpponents = [];

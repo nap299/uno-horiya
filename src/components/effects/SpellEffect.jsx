@@ -1,19 +1,19 @@
 // src/components/effects/SpellEffect.jsx - Pure Graphical Effect Banners
 import React from 'react';
-import fireEffect from '../../assets/effects/fire.png';
-import flashEffect from '../../assets/effects/flash.png';
-import plantEffect from '../../assets/effects/plant.png';
-import waterEffect from '../../assets/effects/water.png';
-import swiftEffect from '../../assets/effects/swift.png';
-import draw2Effect from '../../assets/effects/+2.png';
-import draw4Effect from '../../assets/effects/+4.png';
-import draw6Effect from '../../assets/effects/+6.png';
-import draw8Effect from '../../assets/effects/+8.png';
-import draw10Effect from '../../assets/effects/+10.png';
-import redSkipEffect from '../../assets/effects/red_skip.png';
-import greenSkipEffect from '../../assets/effects/green_skip.png';
-import blueSkipEffect from '../../assets/effects/blue_skip.png';
-import yellowSkipEffect from '../../assets/effects/yellow_skip.png';
+import fireEffect from '../../assets/effects/fire.webp';
+import flashEffect from '../../assets/effects/flash.webp';
+import plantEffect from '../../assets/effects/plant.webp';
+import waterEffect from '../../assets/effects/water.webp';
+import swiftEffect from '../../assets/effects/swift.webp';
+import draw2Effect from '../../assets/effects/+2.webp';
+import draw4Effect from '../../assets/effects/+4.webp';
+import draw6Effect from '../../assets/effects/+6.webp';
+import draw8Effect from '../../assets/effects/+8.webp';
+import draw10Effect from '../../assets/effects/+10.webp';
+import redSkipEffect from '../../assets/effects/red_skip.webp';
+import greenSkipEffect from '../../assets/effects/green_skip.webp';
+import blueSkipEffect from '../../assets/effects/blue_skip.webp';
+import yellowSkipEffect from '../../assets/effects/yellow_skip.webp';
 
 const ELEMENT_EFFECT_MAP = {
   ruby: fireEffect,

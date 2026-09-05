@@ -549,7 +549,7 @@ export class RoomManager {
 
     if (!player || !hand) return;
 
-    if (hand.length <= 2) {
+    if (hand.length === 1) {
       gameState.unoState[playerId].hasCalledUno = true;
       gameState.unoState[playerId].mustCallUno = false;
 

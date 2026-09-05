@@ -107,6 +107,11 @@ export function canPlayCard(card, topCard, activeColor, stackedDrawCount = 0, ru
     return false;
   }
 
+  // Swift / Reverse (swift.png) can be played at any time on your turn regardless of previous color!
+  if (card.type === CARD_TYPES.REVERSE) {
+    return true;
+  }
+
   // Turn following Reverse allows ANY color to be played!
   if (activeColor === 'any' || topCard.type === CARD_TYPES.REVERSE) {
     return true;

@@ -43,9 +43,18 @@ app.get('/api/room/:code', (req, res) => {
   });
 });
 
-// Serve frontend static assets if built in ../dist
+// Serve frontend static assets if built in ../dist with high-performance caching
 const distPath = path.join(__dirname, '../dist');
-app.use(express.static(distPath));
+app.use(express.static(distPath, {
+  maxAge: '1y',
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache');
+    } else {
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    }
+  }
+}));
 
 // Fallback all other routes to frontend index.html for SPA
 app.get('*', (req, res, next) => {

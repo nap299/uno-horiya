@@ -59,14 +59,14 @@ export function SpellIcon({ type, size = 16, className = "" }) {
   }
 }
 
-import catAvatar from '../assets/profile/cat.png';
-import dogAvatar from '../assets/profile/dog.png';
-import dragonAvatar from '../assets/profile/dragon.png';
-import sharkAvatar from '../assets/profile/shark.png';
-import chickenAvatar from '../assets/profile/chicken.png';
-import snakeAvatar from '../assets/profile/snake.png';
-import foxAvatar from '../assets/profile/fox.png';
-import tigerAvatar from '../assets/profile/tiger.png';
+import catAvatar from '../assets/profile/cat.webp';
+import dogAvatar from '../assets/profile/dog.webp';
+import dragonAvatar from '../assets/profile/dragon.webp';
+import sharkAvatar from '../assets/profile/shark.webp';
+import chickenAvatar from '../assets/profile/chicken.webp';
+import snakeAvatar from '../assets/profile/snake.webp';
+import foxAvatar from '../assets/profile/fox.webp';
+import tigerAvatar from '../assets/profile/tiger.webp';
 
 export const AVATAR_IMAGE_MAP = {
   cat: catAvatar,

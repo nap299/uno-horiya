@@ -9,6 +9,7 @@ import RoomPage from './pages/RoomPage';
 import GamePage from './pages/GamePage';
 import LoginModal from './components/auth/LoginModal';
 import RulesModal from './components/common/RulesModal';
+import { preloadGameAssets } from './utils/assetPreloader';
 
 export default function App() {
   const { room, gameState, joinRoom } = useGameSocket();
@@ -16,6 +17,11 @@ export default function App() {
 
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showRulesModal, setShowRulesModal] = useState(false);
+
+  // Silently preload all essential game assets into browser cache
+  useEffect(() => {
+    preloadGameAssets();
+  }, []);
 
   // Check URL parameters for direct invite room join (e.g. ?room=RUNE-409)
   useEffect(() => {

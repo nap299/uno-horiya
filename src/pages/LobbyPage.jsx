@@ -94,10 +94,10 @@ export default function LobbyPage({ onOpenProfile, onOpenRules }) {
       {/* 1. Hero Brand Bar */}
       <section className="lobby-brand-hero">
         <img
-          src="./logo1.png"
+          src="./logo1.webp"
           alt="HORIYA"
           className="lobby-brand-logo-img"
-          onError={(e) => { e.target.src = '/logo1.png'; }}
+          onError={(e) => { e.target.src = './logo1.png'; }}
         />
       </section>
 
@@ -156,10 +156,10 @@ export default function LobbyPage({ onOpenProfile, onOpenRules }) {
           <div className="mode-card-header">
             <div className="mode-icon-square icon-quick-play-custom">
               <img
-                src="./quick_play.png"
+                src="./quick_play.webp"
                 alt="Quick Play"
                 className="quick-play-icon-img"
-                onError={(e) => { e.target.src = '/quick_play.png'; }}
+                onError={(e) => { e.target.src = './quick_play.png'; }}
               />
             </div>
             <div className="mode-header-text">
@@ -187,10 +187,10 @@ export default function LobbyPage({ onOpenProfile, onOpenRules }) {
             disabled={isSubmitting}
           >
             <img
-              src="./create_room.png"
+              src="./create_room.webp"
               alt="สร้างห้องเล่นทันที"
               className="create-room-btn-img"
-              onError={(e) => { e.target.src = '/create_room.png'; }}
+              onError={(e) => { e.target.src = './create_room.png'; }}
             />
           </button>
         </div>
@@ -200,10 +200,10 @@ export default function LobbyPage({ onOpenProfile, onOpenRules }) {
           <div className="mode-card-header">
             <div className="mode-icon-square icon-mode-custom-logo">
               <img
-                src="./custom.png"
+                src="./custom.webp"
                 alt="Custom Room"
                 className="mode-custom-icon-img"
-                onError={(e) => { e.target.src = '/custom.png'; }}
+                onError={(e) => { e.target.src = './custom.png'; }}
               />
             </div>
             <div className="mode-header-text">
@@ -233,10 +233,10 @@ export default function LobbyPage({ onOpenProfile, onOpenRules }) {
           <div className="mode-card-header">
             <div className="mode-icon-square icon-mode-custom-logo">
               <img
-                src="./join.png"
+                src="./join.webp"
                 alt="Join Room"
                 className="mode-custom-icon-img"
-                onError={(e) => { e.target.src = '/join.png'; }}
+                onError={(e) => { e.target.src = './join.png'; }}
               />
             </div>
             <div className="mode-header-text">

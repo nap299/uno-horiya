@@ -10,7 +10,7 @@ export default function UnoButton({ onShoutUno, hasCalledUno = false, canCall = 
       className={`uno-shout-button ${isClickable ? 'uno-can-call animate-pulse-glow' : 'uno-disabled'} ${isUrgent ? 'uno-urgent' : ''} ${hasCalledUno ? 'uno-called' : ''}`}
       onClick={isClickable ? onShoutUno : undefined}
       disabled={!isClickable}
-      title={isClickable ? "กดเรียก UNO เมื่อเหลือไพ่ 1-2 ใบ!" : "ยังเรียก UNO ไม่ได้"}
+      title={isClickable ? "กดเรียก UNO เมื่อเหลือไพ่ใบเดียว!" : "ยังเรียก UNO ไม่ได้ (ต้องเหลือไพ่บนมือใบเดียว)"}
     >
       <div className="uno-btn-content">
         <Flame className="uno-fire-icon" size={18} />
