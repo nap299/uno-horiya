@@ -1,4 +1,4 @@
-// src/features/room/RoomBrowserModal.jsx - Professional Room Browser Modal
+// src/features/room/RoomBrowserModal.jsx - Professional Room Browser Modal (Refined Minimal Senior UI)
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   Compass,
@@ -9,10 +9,7 @@ import {
   Zap,
   LogIn,
   Plus,
-  ShieldCheck,
-  Radio,
   X,
-  Sparkles,
   Layers
 } from 'lucide-react';
 import { AVATAR_PRESETS } from '../../models/cardTypes';
@@ -28,7 +25,6 @@ export default function RoomBrowserModal({
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterStatus, setFilterStatus] = useState('ALL'); // 'ALL' | 'LOBBY' | 'PLAYING'
   const [joiningCode, setJoiningCode] = useState(null);
 
   const loadRooms = useCallback(async (showRefreshingSpinner = false) => {
@@ -75,40 +71,30 @@ export default function RoomBrowserModal({
     return preset.image;
   };
 
-  // Filter rooms
+  // Filter rooms by search query only (no tabs)
   const filteredRooms = rooms.filter(room => {
     const query = searchQuery.trim().toUpperCase();
-    const matchesQuery = !query ||
-      room.code?.toUpperCase().includes(query) ||
+    if (!query) return true;
+    return room.code?.toUpperCase().includes(query) ||
       room.hostName?.toUpperCase().includes(query);
-
-    if (!matchesQuery) return false;
-    if (filterStatus === 'LOBBY') return room.status === 'LOBBY';
-    if (filterStatus === 'PLAYING') return room.status === 'PLAYING';
-    return true;
   });
-
-  const waitingCount = rooms.filter(r => r.status === 'LOBBY').length;
 
   return (
     <div className="modal-backdrop room-browser-backdrop" onClick={onClose}>
       <div className="room-browser-dialog animate-scale-up" onClick={(e) => e.stopPropagation()}>
 
-        {/* 1. Modal Header */}
+        {/* 1. Modal Header (Single Clean Row, No Subtext) */}
         <div className="room-browser-header">
           <div className="browser-header-title">
             <div className="browser-title-icon-box">
-              <Compass size={22} className="browser-title-icon" />
+              <Compass size={20} className="browser-title-icon" />
             </div>
-            <div>
-              <div className="browser-header-headline-row">
-                <h2>ค้นหาห้องประลอง</h2>
-                <span className="live-pulse-badge">
-                  <span className="live-dot animate-pulse" />
-                  <span>สด ({rooms.length} ห้อง)</span>
-                </span>
-              </div>
-              <p className="browser-header-sub">เลือกล็อบบี้ห้องประลองที่เปิดรับผู้เล่น หรือสร้างห้องใหม่</p>
+            <div className="browser-header-headline-row">
+              <h2>ค้นหาห้องประลอง</h2>
+              <span className="live-pulse-badge">
+                <span className="live-dot animate-pulse" />
+                <span>{rooms.length} ห้อง</span>
+              </span>
             </div>
           </div>
 
@@ -120,7 +106,7 @@ export default function RoomBrowserModal({
               title="รีเฟรชรายชื่อห้อง"
               disabled={isRefreshing}
             >
-              <RefreshCw size={17} />
+              <RefreshCw size={16} />
             </button>
             <button
               type="button"
@@ -128,15 +114,15 @@ export default function RoomBrowserModal({
               onClick={onClose}
               title="ปิดหน้าต่าง"
             >
-              <X size={18} />
+              <X size={17} />
             </button>
           </div>
         </div>
 
-        {/* 2. Tactical Filter & Search Bar */}
+        {/* 2. Search Bar Only (Tabs Removed) */}
         <div className="room-browser-filter-bar">
           <div className="browser-search-box">
-            <Search size={16} className="search-icon-svg" />
+            <Search size={15} className="search-icon-svg" />
             <input
               type="text"
               placeholder="ค้นหาด้วยรหัสห้อง หรือชื่อหัวหน้า..."
@@ -154,61 +140,21 @@ export default function RoomBrowserModal({
               </button>
             )}
           </div>
-
-          <div className="browser-tabs-row">
-            <button
-              type="button"
-              className={`browser-tab-pill ${filterStatus === 'ALL' ? 'tab-pill-active' : ''}`}
-              onClick={() => setFilterStatus('ALL')}
-            >
-              ทั้งหมด ({rooms.length})
-            </button>
-            <button
-              type="button"
-              className={`browser-tab-pill ${filterStatus === 'LOBBY' ? 'tab-pill-active tab-pill-green' : ''}`}
-              onClick={() => setFilterStatus('LOBBY')}
-            >
-              รอผู้เล่น ({waitingCount})
-            </button>
-            <button
-              type="button"
-              className={`browser-tab-pill ${filterStatus === 'PLAYING' ? 'tab-pill-active tab-pill-amber' : ''}`}
-              onClick={() => setFilterStatus('PLAYING')}
-            >
-              กำลังประลอง ({rooms.length - waitingCount})
-            </button>
-          </div>
         </div>
 
         {/* 3. Room List Content Area */}
         <div className="room-browser-list-container custom-scrollbar">
           {isLoading ? (
             <div className="browser-loading-state">
-              <RefreshCw size={32} className="is-spinning state-spinner" />
-              <p>กำลังค้นหาห้องประลองในมิติ...</p>
+              <RefreshCw size={28} className="is-spinning state-spinner" />
+              <p>กำลังค้นหาห้องประลอง...</p>
             </div>
           ) : filteredRooms.length === 0 ? (
             <div className="browser-empty-state">
               <div className="empty-icon-shield">
-                <Compass size={40} className="empty-compass-icon" />
+                <Compass size={36} className="empty-compass-icon" />
               </div>
               <h3>{searchQuery ? 'ไม่พบห้องที่ตรงกับการค้นหา' : 'ยังไม่มีห้องประลองที่เปิดอยู่'}</h3>
-              <p>
-                {searchQuery
-                  ? `ไม่พบรหัสห้องหรือชื่อ "${searchQuery}" ลองตรวจสอบรหัสอีกครั้ง`
-                  : 'คุณสามารถเป็นผู้เปิดฉากประลองคนแรกได้ทันที!'}
-              </p>
-              <button
-                type="button"
-                className="btn-empty-create"
-                onClick={() => {
-                  onClose();
-                  onCreateRoomClick();
-                }}
-              >
-                <Plus size={16} />
-                <span>สร้างห้องประลองใหม่</span>
-              </button>
             </div>
           ) : (
             <div className="room-cards-grid">
@@ -264,7 +210,7 @@ export default function RoomBrowserModal({
 
                       <div className="room-player-count-box">
                         <div className="player-count-header">
-                          <Users size={14} className="player-count-icon" />
+                          <Users size={13} className="player-count-icon" />
                           <span className="player-count-number">
                             <strong className={isFull ? 'text-danger' : 'text-success'}>
                               {room.playerCount}
@@ -272,7 +218,6 @@ export default function RoomBrowserModal({
                             {' '}/ {room.maxPlayers || 4} คน
                           </span>
                         </div>
-                        {/* Segmented mini progress bar */}
                         <div className="player-mini-bar">
                           <div
                             className={`player-mini-bar-fill ${isFull ? 'bar-full' : 'bar-available'}`}
@@ -320,7 +265,7 @@ export default function RoomBrowserModal({
                             </>
                           ) : (
                             <>
-                              <LogIn size={15} />
+                              <LogIn size={14} />
                               <span>เข้าร่วมห้องนี้</span>
                             </>
                           )}
@@ -342,23 +287,18 @@ export default function RoomBrowserModal({
           )}
         </div>
 
-        {/* 4. Modal Footer: Fast Action */}
+        {/* 4. Modal Footer: Single Create Room Button (No duplicate, no small text, no star icon) */}
         <div className="room-browser-footer">
-          <div className="browser-footer-left">
-            <span className="footer-tip-text">
-              <Sparkles size={13} className="text-gold" /> คลิกที่ห้องที่ต้องการเพื่อเข้าร่วมได้ทันที
-            </span>
-          </div>
           <button
             type="button"
-            className="btn-footer-create-room"
+            className="btn-footer-create-room-primary"
             onClick={() => {
               onClose();
               onCreateRoomClick();
             }}
           >
-            <Plus size={15} />
-            <span>สร้างห้องของฉัน</span>
+            <Plus size={16} />
+            <span>สร้างห้องประลองใหม่</span>
           </button>
         </div>
 
