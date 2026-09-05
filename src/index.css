@@ -3431,6 +3431,27 @@ input:checked + .slider:before {
   font-weight: 400;
 }
 
+.btn-replay-effect {
+  background: rgba(255, 215, 0, 0.08);
+  border: 1px solid rgba(255, 215, 0, 0.35);
+  color: #FFD700;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 0.72rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  margin-top: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-replay-effect:hover {
+  background: rgba(255, 215, 0, 0.2);
+  border-color: #FFD700;
+  transform: translateY(-1px);
+}
+
 .gameover-actions {
   display: flex;
   gap: 8px;
@@ -3440,6 +3461,183 @@ input:checked + .slider:before {
 
 .btn-rematch, .btn-exit-lobby {
   flex: 1;
+}
+
+/* =========================================================
+   Winner Profile Cinematic Showcase (Video & Image Effect)
+   ========================================================= */
+
+.winner-backdrop-overlay {
+  backdrop-filter: blur(12px);
+  background: rgba(5, 7, 14, 0.9);
+  z-index: 200;
+}
+
+.winner-showcase-dialog {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  background: radial-gradient(circle at 50% 25%, #182235 0%, #0c111a 100%);
+  border: 1.5px solid rgba(255, 215, 0, 0.5);
+  border-radius: 20px;
+  box-shadow: 0 0 50px rgba(255, 215, 0, 0.25), 0 20px 50px rgba(0, 0, 0, 0.9);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  will-change: transform, opacity;
+  animation: modalScaleUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.winner-showcase-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.45);
+  border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.winner-showcase-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.winner-showcase-title {
+  font-family: var(--font-rune);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  background: linear-gradient(135deg, #FFF, #FFD700);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.winner-showcase-skip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #DDD;
+  border-radius: 12px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.winner-showcase-skip:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #FFF;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.winner-media-container {
+  position: relative;
+  width: 100%;
+  height: 440px;
+  max-height: 60dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  overflow: hidden;
+}
+
+.winner-video-element {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+  display: block;
+}
+
+.winner-image-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.12) 0%, #000 75%);
+}
+
+.winner-image-element {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.4));
+}
+
+.animate-image-glow {
+  animation: winnerImageBreathing 3.6s ease-in-out infinite alternate;
+}
+
+@keyframes winnerImageBreathing {
+  0% {
+    transform: scale(0.96);
+    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.3));
+  }
+  50% {
+    transform: scale(1.02);
+    filter: drop-shadow(0 0 35px rgba(255, 215, 0, 0.65));
+  }
+  100% {
+    transform: scale(0.98);
+    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.4));
+  }
+}
+
+.winner-showcase-footer {
+  padding: 10px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.55);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.winner-showcase-subinfo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+
+.winner-char-name {
+  font-weight: 600;
+  color: #FFF;
+}
+
+.winner-char-dot {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.winner-char-badge {
+  color: #FFD700;
+  font-size: 0.78rem;
+  background: rgba(255, 215, 0, 0.12);
+  padding: 1px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.winner-progress-track {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.winner-progress-thumb {
+  height: 100%;
+  background: linear-gradient(90deg, #FFD700, #FF8C00);
+  border-radius: 2px;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+  transition: width 0.05s linear;
 }
 
 /* =========================================================

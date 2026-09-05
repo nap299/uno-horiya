@@ -70,21 +70,40 @@ const ESSENTIAL_ASSETS = [
   './browse_rooms.webp',
   './search.webp',
   './bg.webp',
-  './change_color.webp'
+  './change_color.webp',
+
+  // 5. Winner Victory Effects
+  './win_effect/cat.mp4',
+  './win_effect/chicken.mp4',
+  './win_effect/dog.mp4',
+  './win_effect/dragon.mp4',
+  './win_effect/fox.mp4',
+  './win_effect/shark.mp4',
+  './win_effect/snake.png',
+  './win_effect/tiger.png'
 ];
 
 let hasPreloaded = false;
 
 /**
- * Preloads an image into browser memory cache.
- * Returns a Promise that resolves when the image finishes loading (or fails gracefully).
+ * Preloads an image or video into browser memory cache.
+ * Returns a Promise that resolves when the asset finishes loading (or fails gracefully).
  */
-function preloadSingleImage(url) {
+function preloadSingleAsset(url) {
   return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => resolve({ url, success: true });
-    img.onerror = () => resolve({ url, success: false });
-    img.src = url;
+    if (typeof url === 'string' && url.endsWith('.mp4')) {
+      const v = document.createElement('video');
+      v.preload = 'auto';
+      v.onloadeddata = () => resolve({ url, success: true });
+      v.onerror = () => resolve({ url, success: false });
+      v.src = url;
+      v.load();
+    } else {
+      const img = new Image();
+      img.onload = () => resolve({ url, success: true });
+      img.onerror = () => resolve({ url, success: false });
+      img.src = url;
+    }
   });
 }
 
@@ -104,7 +123,7 @@ export function preloadGameAssets() {
     const processNextBatch = () => {
       if (queue.length === 0) return;
       const batch = queue.splice(0, BATCH_SIZE);
-      Promise.all(batch.map(preloadSingleImage)).finally(() => {
+      Promise.all(batch.map(preloadSingleAsset)).finally(() => {
         setTimeout(processNextBatch, 80);
       });
     };
