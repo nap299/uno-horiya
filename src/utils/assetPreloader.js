@@ -79,8 +79,8 @@ const ESSENTIAL_ASSETS = [
   './win_effect/dragon.mp4',
   './win_effect/fox.mp4',
   './win_effect/shark.mp4',
-  './win_effect/snake.png',
-  './win_effect/tiger.png'
+  './win_effect/snake.webp',
+  './win_effect/tiger.webp'
 ];
 
 let hasPreloaded = false;

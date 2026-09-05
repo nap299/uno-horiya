@@ -39,13 +39,13 @@ export const WINNER_EFFECTS = {
   },
   snake: {
     type: 'image',
-    src: './win_effect/snake.png',
+    src: './win_effect/snake.webp',
     name: 'snake',
     title: 'พญางูเงาพราย'
   },
   tiger: {
     type: 'image',
-    src: './win_effect/tiger.png',
+    src: './win_effect/tiger.webp',
     name: 'tiger',
     title: 'เสือเจ้าป่า'
   }
