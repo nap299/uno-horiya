@@ -127,10 +127,25 @@ export default function GamePage() {
   );
   const mustDraw = isMyTurn && !hasPlayableCard;
 
-  // สถานะการเรียก UNO: ต้องเหลือการ์ดบนมือใบเดียวเท่านั้น ปุ่มถึงจะแสดงสีให้กด
+  // สถานะการเรียก UNO: แสดงผลทันทีเมื่อกด และจะกดได้เมื่อเหลือไพ่ใบเดียวเท่านั้น
+  const [localCalledUno, setLocalCalledUno] = useState(false);
+
+  useEffect(() => {
+    if (myHand.length !== 1) {
+      setLocalCalledUno(false);
+    }
+  }, [myHand.length]);
+
   const myUnoState = gameState.playerCardCounts?.[myId] || { hasCalledUno: false, count: myHand.length };
-  const canCallUno = myHand.length === 1 && !myUnoState.hasCalledUno;
-  const isUrgentUno = myHand.length === 1 && !myUnoState.hasCalledUno;
+  const hasCalledUno = myUnoState.hasCalledUno || localCalledUno;
+  const canCallUno = myHand.length === 1 && !hasCalledUno;
+  const isUrgentUno = myHand.length === 1 && !hasCalledUno;
+
+  const handleShoutUno = () => {
+    setLocalCalledUno(true);
+    sound.playUnoShout();
+    shoutUno();
+  };
 
   // เรียงคู่ต่อสู้ให้ขึ้นอยู่กับตำแหน่งของตัวเอง (สูงสุด 4 คนรอบโต๊ะ)
   const reorderedOpponents = [];
@@ -290,8 +305,8 @@ export default function GamePage() {
         <div className="floating-actions-spacer" />
 
         <UnoButton
-          onShoutUno={shoutUno}
-          hasCalledUno={myUnoState.hasCalledUno}
+          onShoutUno={handleShoutUno}
+          hasCalledUno={hasCalledUno}
           canCall={canCallUno}
           isUrgent={isUrgentUno}
         />

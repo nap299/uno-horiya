@@ -1865,14 +1865,28 @@ body {
   color: #94A3B8;
 }
 
-/* เรียก UNO แล้ว */
+/* เรียก UNO แล้ว (เขียวเด่น สว่าง คมชัด มีเอฟเฟกต์เรืองแสงยืนยัน) */
 .uno-shout-button.uno-called {
-  background: #0F8A5F;
-  border: 1.5px solid #13A874;
-  color: #FFFFFF;
-  opacity: 0.85;
+  background: #10B981 !important;
+  border: 1.5px solid #6EE7B7 !important;
+  color: #FFFFFF !important;
+  opacity: 1 !important;
   cursor: default;
-  box-shadow: 0 2px 6px rgba(15, 138, 95, 0.4);
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.7), 0 3px 0 #059669 !important;
+  pointer-events: none;
+}
+
+.uno-shout-button.uno-called .uno-btn-content {
+  color: #FFFFFF !important;
+}
+
+.uno-shout-button.uno-called .uno-check-icon {
+  color: #FFFFFF !important;
+}
+
+.uno-shout-button.uno-called .uno-text {
+  color: #FFFFFF !important;
+  font-weight: 800 !important;
 }
 
 .uno-btn-content {

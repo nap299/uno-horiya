@@ -129,6 +129,23 @@ export function GameSocketProvider({ children }) {
       sound.playUnoShout();
       setUnoAlert({ type: 'SHOUT', playerName, playerId });
       setTimeout(() => setUnoAlert(null), 3000);
+
+      setGameState(prev => {
+        if (!prev) return prev;
+        const counts = prev.playerCardCounts || {};
+        const target = counts[playerId] || {};
+        return {
+          ...prev,
+          playerCardCounts: {
+            ...counts,
+            [playerId]: {
+              ...target,
+              hasCalledUno: true,
+              mustCallUno: false
+            }
+          }
+        };
+      });
     });
 
     s.on('UNO_PENALTY', ({ callerName, targetName, targetId }) => {
@@ -329,6 +346,22 @@ export function GameSocketProvider({ children }) {
 
   const shoutUno = () => {
     if (!socket || !room) return;
+    setGameState(prev => {
+      if (!prev) return prev;
+      const counts = prev.playerCardCounts || {};
+      const target = counts[socket.id] || {};
+      return {
+        ...prev,
+        playerCardCounts: {
+          ...counts,
+          [socket.id]: {
+            ...target,
+            hasCalledUno: true,
+            mustCallUno: false
+          }
+        }
+      };
+    });
     socket.emit('SHOUT_UNO', { roomCode: room.code });
   };
 

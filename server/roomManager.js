@@ -562,6 +562,8 @@ export class RoomManager {
         playerId,
         playerName: player.name
       });
+
+      this.broadcastGameState(roomCode);
     }
   }
 
