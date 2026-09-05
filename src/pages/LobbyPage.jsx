@@ -13,7 +13,11 @@ import {
   Sparkles,
   Users,
   Bot,
-  Play
+  Play,
+  Search,
+  Compass,
+  Radio,
+  DoorOpen
 } from 'lucide-react';
 import { useGameSocket } from '../context/GameSocketContext';
 import { useAuth } from '../context/AuthContext';
@@ -21,13 +25,15 @@ import { ELEMENT_THEMES } from '../models/cardThemes';
 import { ElementIcon, AvatarIcon } from '../utils/IconRenderer';
 import { sound } from '../audio/soundEngine';
 import CreateRoomModal from '../features/room/CreateRoomModal';
+import RoomBrowserModal from '../features/room/RoomBrowserModal';
 
 export default function LobbyPage({ onOpenProfile, onOpenRules }) {
   const { user } = useAuth();
-  const { createRoom, joinRoom, errorMsg, clearError } = useGameSocket();
+  const { createRoom, joinRoom, fetchRooms, errorMsg, clearError } = useGameSocket();
 
   const [roomCodeInput, setRoomCodeInput] = useState('');
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showBrowseModal, setShowBrowseModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [rules, setRules] = useState({
@@ -195,7 +201,50 @@ export default function LobbyPage({ onOpenProfile, onOpenRules }) {
           </button>
         </div>
 
-        {/* Mode 2: Custom Room */}
+        {/* Mode 2: Browse Rooms (ค้นหาห้อง - ตามคำขอของผู้ใช้) */}
+        <div className="mode-card mode-browse-rooms">
+          <div className="mode-card-header">
+            <div className="mode-icon-square icon-mode-custom-logo">
+              <img
+                src="./browse_rooms.webp"
+                alt="ค้นหาห้อง"
+                className="mode-custom-icon-img"
+                onError={(e) => { e.target.src = '/browse_rooms.webp'; }}
+              />
+            </div>
+            <div className="mode-header-text">
+              <div className="mode-tag-pill tag-pill-emerald">
+                <Radio size={11} className="animate-pulse" />
+                <span>ห้องออนไลน์</span>
+              </div>
+              <h3 className="mode-heading">ค้นหาห้อง</h3>
+            </div>
+          </div>
+
+          <p className="mode-desc">
+            ค้นหาและเลือกล็อบบี้ห้องที่มีคนสร้างไว้ ดูจำนวนผู้เล่นในห้อง และกดเข้าร่วมการประลองได้ทันที
+          </p>
+
+          <div className="mode-features-list">
+            <span className="feature-pill"><Users size={12} /> แสดงจำนวนคน</span>
+            <span className="feature-pill"><DoorOpen size={12} /> เข้าร่วมได้ทันที</span>
+            <span className="feature-pill"><Sparkles size={12} /> อัปเดตสด</span>
+          </div>
+
+          <button
+            className="btn-solid-primary btn-browse-action"
+            onClick={() => {
+              sound.playCard('sapphire');
+              setShowBrowseModal(true);
+            }}
+            disabled={isSubmitting}
+          >
+            <Search size={16} />
+            <span>ค้นหา & เลือกล็อบบี้ห้อง</span>
+          </button>
+        </div>
+
+        {/* Mode 3: Custom Room */}
         <div className="mode-card mode-custom-room">
           <div className="mode-card-header">
             <div className="mode-icon-square icon-mode-custom-logo">
@@ -280,6 +329,30 @@ export default function LobbyPage({ onOpenProfile, onOpenRules }) {
           onRulesChange={setRules}
           onConfirm={handleCreateCustom}
           onClose={() => setShowCreateModal(false)}
+        />
+      )}
+
+      {/* Room Browser Modal (ค้นหาห้องประลอง) */}
+      {showBrowseModal && (
+        <RoomBrowserModal
+          fetchRooms={fetchRooms}
+          onJoinRoom={async (code) => {
+            try {
+              setIsSubmitting(true);
+              sound.playCard('sapphire');
+              await joinRoom(code);
+              setShowBrowseModal(false);
+            } catch (err) {
+              console.error('Join room failed:', err);
+            } finally {
+              setIsSubmitting(false);
+            }
+          }}
+          onCreateRoomClick={() => {
+            setShowBrowseModal(false);
+            setShowCreateModal(true);
+          }}
+          onClose={() => setShowBrowseModal(false)}
         />
       )}
     </div>

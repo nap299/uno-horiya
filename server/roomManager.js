@@ -59,6 +59,29 @@ export class RoomManager {
     return this.rooms.get(roomCode?.toUpperCase());
   }
 
+  getPublicRooms() {
+    const list = [];
+    for (const [code, room] of this.rooms.entries()) {
+      const host = room.players.find(p => p.isHost) || room.players[0];
+      list.push({
+        code: room.code,
+        status: room.status, // 'LOBBY' or 'PLAYING'
+        playerCount: room.players.length,
+        maxPlayers: room.rules?.maxPlayers || 4,
+        hostName: host?.name || 'หัวหน้าห้อง',
+        hostAvatar: host?.avatar || 'cat',
+        hostTitle: host?.title || 'จอมเวทประลอง',
+        rules: room.rules,
+        createdAt: room.createdAt
+      });
+    }
+    return list.sort((a, b) => {
+      if (a.status === 'LOBBY' && b.status !== 'LOBBY') return -1;
+      if (a.status !== 'LOBBY' && b.status === 'LOBBY') return 1;
+      return b.createdAt - a.createdAt;
+    });
+  }
+
   joinRoom(roomCode, player) {
     const room = this.getRoom(roomCode);
     if (!room) return { error: 'Room not found in the realm.' };

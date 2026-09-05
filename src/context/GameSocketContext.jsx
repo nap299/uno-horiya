@@ -281,6 +281,28 @@ export function GameSocketProvider({ children }) {
     });
   };
 
+  const fetchRooms = () => {
+    return new Promise((resolve) => {
+      if (socket && socket.connected) {
+        socket.emit('GET_ROOMS', (res) => {
+          if (res && Array.isArray(res.rooms)) {
+            resolve(res.rooms);
+          } else {
+            fetch('./api/rooms')
+              .then(r => r.json())
+              .then(d => resolve(d.rooms || []))
+              .catch(() => resolve([]));
+          }
+        });
+      } else {
+        fetch('./api/rooms')
+          .then(r => r.json())
+          .then(d => resolve(d.rooms || []))
+          .catch(() => resolve([]));
+      }
+    });
+  };
+
   const addBot = () => {
     if (!socket || !room) return;
     socket.emit('ADD_BOT', { roomCode: room.code });
@@ -398,6 +420,7 @@ export function GameSocketProvider({ children }) {
       clearError,
       createRoom,
       joinRoom,
+      fetchRooms,
       addBot,
       removeBot,
       toggleReady,

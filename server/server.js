@@ -43,6 +43,13 @@ app.get('/api/room/:code', (req, res) => {
   });
 });
 
+// Get list of active public rooms
+app.get('/api/rooms', (req, res) => {
+  res.json({
+    rooms: roomManager.getPublicRooms()
+  });
+});
+
 // Serve frontend static assets if built in ../dist with high-performance caching
 const distPath = path.join(__dirname, '../dist');
 app.use(express.static(distPath, {
@@ -72,6 +79,11 @@ app.get('*', (req, res, next) => {
 io.on('connection', (socket) => {
   let currentRoomCode = null;
   let currentPlayerId = null;
+
+  // Get active rooms list
+  socket.on('GET_ROOMS', (callback) => {
+    if (callback) callback({ rooms: roomManager.getPublicRooms() });
+  });
 
   // Create new room
   socket.on('CREATE_ROOM', ({ player, options }, callback) => {
