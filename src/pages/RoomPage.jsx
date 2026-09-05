@@ -77,6 +77,12 @@ export default function RoomPage({ onOpenProfile }) {
     }
   };
 
+  const handleToggleReady = () => {
+    if (isReady) return;
+    sound.playCard('emerald');
+    toggleReady();
+  };
+
   return (
     <div className="room-view-container animate-fade-in">
       {errorMsg && (
@@ -216,10 +222,12 @@ export default function RoomPage({ onOpenProfile }) {
           </button>
         ) : (
           <button
-            className={`btn-primary-action btn-toggle-ready ${isReady ? 'ready-active' : ''}`}
-            onClick={toggleReady}
+            className={`btn-primary-action btn-toggle-ready ${isReady ? 'ready-confirmed' : 'ready-pending'}`}
+            onClick={!isReady ? handleToggleReady : undefined}
+            disabled={isReady}
+            title={isReady ? 'คุณพร้อมแล้ว (รอหัวหน้าห้องเริ่มเกม)' : 'คลิกเพื่อยืนยันความพร้อม'}
           >
-            <Check size={16} />
+            <Check size={18} strokeWidth={isReady ? 2.8 : 2.2} />
             <span>{isReady ? 'พร้อมแล้ว' : 'พร้อม'}</span>
           </button>
         )}
