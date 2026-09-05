@@ -67,8 +67,7 @@ const ESSENTIAL_ASSETS = [
   './create_room.webp',
   './custom.webp',
   './join.webp',
-  './arena.jpg',
-  './bg.jpeg'
+  './bg.webp'
 ];
 
 let hasPreloaded = false;
