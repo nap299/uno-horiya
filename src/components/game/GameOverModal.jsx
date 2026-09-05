@@ -1,6 +1,5 @@
 // src/components/game/GameOverModal.jsx - Cinematic Victory Showcase & Results
 import React, { useState, useEffect, useRef } from 'react';
-import confetti from 'canvas-confetti';
 import { Trophy, RotateCcw, Home, FastForward, Play } from 'lucide-react';
 import { AvatarIcon } from '../../utils/IconRenderer';
 import { sound } from '../../audio/soundEngine';
@@ -14,35 +13,10 @@ export default function GameOverModal({ winner, isSelfWinner, onPlayAgain, onLea
   const videoRef = useRef(null);
   const effect = getWinnerEffect(winner);
 
-  // Trigger celebration sound and confetti when entering RESULT phase
+  // Trigger celebration sound when entering RESULT phase
   useEffect(() => {
-    if (phase === 'RESULT') {
-      if (isSelfWinner) {
-        sound.playVictory();
-        const end = Date.now() + 2500;
-        const colors = ['#FFD700', '#FF3366', '#00D2FC', '#00E676', '#B5179E'];
-
-        (function frame() {
-          confetti({
-            particleCount: 4,
-            angle: 60,
-            spread: 55,
-            origin: { x: 0 },
-            colors
-          });
-          confetti({
-            particleCount: 4,
-            angle: 120,
-            spread: 55,
-            origin: { x: 1 },
-            colors
-          });
-
-          if (Date.now() < end) {
-            requestAnimationFrame(frame);
-          }
-        })();
-      }
+    if (phase === 'RESULT' && isSelfWinner) {
+      sound.playVictory();
     }
   }, [phase, isSelfWinner]);
 
