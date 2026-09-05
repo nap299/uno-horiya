@@ -2119,6 +2119,23 @@ body {
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.75) !important;
 }
 
+/* Not My Turn: Cards in hand are completely dimmed, darkened and unlit */
+.pro-card-slot.is-not-my-turn,
+.pro-fan-container.not-my-turn .pro-card-slot {
+  cursor: not-allowed !important;
+}
+
+.pro-card-slot.is-not-my-turn .fantasy-card,
+.pro-fan-container.not-my-turn .fantasy-card {
+  filter: brightness(0.32) saturate(0.3) contrast(0.85) !important;
+  opacity: 0.62 !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.75) !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
 /* Selected Card (When tapped/clicked, THAT card pops up prominently with white glowing rim) */
 .pro-card-slot.is-selected-slot .fantasy-card {
   opacity: 1 !important;
@@ -3473,101 +3490,80 @@ input:checked + .slider:before {
   z-index: 200;
 }
 
-.winner-showcase-dialog {
-  position: relative;
-  width: 100%;
-  max-width: 420px;
-  background: radial-gradient(circle at 50% 25%, #182235 0%, #0c111a 100%);
-  border: 1.5px solid rgba(255, 215, 0, 0.5);
-  border-radius: 20px;
-  box-shadow: 0 0 50px rgba(255, 215, 0, 0.25), 0 20px 50px rgba(0, 0, 0, 0.9);
+/* =========================================================
+   Winner Profile Cinematic Showcase (100% Fullscreen Seamless)
+   ========================================================= */
+
+.winner-fullscreen-backdrop {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  background: #000;
+  z-index: 9999;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  will-change: transform, opacity;
-  animation: modalScaleUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.winner-showcase-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  background: rgba(0, 0, 0, 0.45);
-  border-bottom: 1px solid rgba(255, 215, 0, 0.2);
-}
-
-.winner-showcase-badge {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.winner-showcase-title {
-  font-family: var(--font-rune);
-  font-size: 1.05rem;
-  font-weight: 600;
-  letter-spacing: 0.8px;
-  background: linear-gradient(135deg, #FFF, #FFD700);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.winner-showcase-skip {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #DDD;
-  border-radius: 12px;
-  padding: 4px 10px;
-  font-size: 0.75rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.winner-showcase-skip:hover {
-  background: rgba(255, 255, 255, 0.2);
-  color: #FFF;
-  border-color: rgba(255, 255, 255, 0.4);
-}
-
-.winner-media-container {
-  position: relative;
-  width: 100%;
-  height: 440px;
-  max-height: 60dvh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #000;
+}
+
+/* Seamless Ambient Glow Layer */
+.winner-ambient-layer {
+  position: absolute;
+  inset: -40px;
+  width: calc(100% + 80px);
+  height: calc(100% + 80px);
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.winner-ambient-media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(40px) brightness(0.55) saturate(1.2);
+  transform: scale(1.15);
+  opacity: 0.9;
+}
+
+/* Foreground Media: Seamless Full Screen */
+.winner-fullscreen-media-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: 100vw;
+  max-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
   overflow: hidden;
 }
 
-.winner-video-element {
+.winner-fullscreen-media-video {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  background: #000;
+  object-fit: cover;
+  display: block;
+  background: transparent;
+}
+
+.winner-fullscreen-media-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
 
-.winner-image-container {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px;
-  background: radial-gradient(circle, rgba(255, 215, 0, 0.12) 0%, #000 75%);
-}
-
-.winner-image-element {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.4));
+/* On wider screens (tablets/desktops), keep crisp aspect ratio while ambient fills the sides seamlessly */
+@media (min-width: 768px) and (orientation: landscape) {
+  .winner-fullscreen-media-video,
+  .winner-fullscreen-media-img {
+    max-width: 580px;
+    object-fit: contain;
+  }
 }
 
 .animate-image-glow {
@@ -3576,67 +3572,132 @@ input:checked + .slider:before {
 
 @keyframes winnerImageBreathing {
   0% {
-    transform: scale(0.96);
-    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.3));
-  }
-  50% {
-    transform: scale(1.02);
-    filter: drop-shadow(0 0 35px rgba(255, 215, 0, 0.65));
-  }
-  100% {
-    transform: scale(0.98);
+    transform: scale(1);
     filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.4));
   }
+  50% {
+    transform: scale(1.04);
+    filter: drop-shadow(0 0 45px rgba(255, 215, 0, 0.75));
+  }
+  100% {
+    transform: scale(1.02);
+    filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.5));
+  }
 }
 
-.winner-showcase-footer {
-  padding: 10px 16px;
+/* Floating Clean Header (No borders or box frames) */
+.winner-floating-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 24px 20px 36px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 100%);
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-  background: rgba(0, 0, 0, 0.55);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+  pointer-events: auto;
 }
 
-.winner-showcase-subinfo {
+.winner-floating-badge {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  font-size: 0.85rem;
+  gap: 10px;
 }
 
-.winner-char-name {
-  font-weight: 600;
-  color: #FFF;
-}
-
-.winner-char-dot {
-  color: rgba(255, 255, 255, 0.4);
-}
-
-.winner-char-badge {
+.winner-floating-title {
+  font-family: var(--font-rune);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 1px;
   color: #FFD700;
-  font-size: 0.78rem;
-  background: rgba(255, 215, 0, 0.12);
-  padding: 1px 8px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 215, 0, 0.3);
+  text-shadow: 0 0 16px rgba(255, 215, 0, 0.75), 0 2px 6px rgba(0, 0, 0, 0.9);
 }
 
-.winner-progress-track {
+.winner-floating-skip-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #FFF;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.winner-floating-skip-btn:hover {
+  background: rgba(255, 215, 0, 0.25);
+  border-color: #FFD700;
+  color: #FFD700;
+  transform: scale(1.05);
+}
+
+/* Floating Clean Footer (No borders or box frames) */
+.winner-floating-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 38px 20px 24px;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.88) 0%, rgba(0, 0, 0, 0.45) 60%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.winner-floating-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.52);
+  backdrop-filter: blur(10px);
+  padding: 6px 18px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 215, 0, 0.35);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+}
+
+.winner-floating-name {
+  font-weight: 700;
+  color: #FFF;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+}
+
+.winner-floating-dot {
+  color: rgba(255, 215, 0, 0.5);
+}
+
+.winner-floating-badge-text {
+  color: #FFD700;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.winner-floating-progress-track {
   width: 100%;
+  max-width: 320px;
   height: 4px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
   overflow: hidden;
 }
 
-.winner-progress-thumb {
+.winner-floating-progress-thumb {
   height: 100%;
   background: linear-gradient(90deg, #FFD700, #FF8C00);
-  border-radius: 2px;
-  box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
   transition: width 0.05s linear;
 }
 

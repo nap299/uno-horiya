@@ -292,7 +292,7 @@ export default function HandFan({
       {/* Curved Fan Container (Yu-Gi-Oh! Duel Links Hand Arc) */}
       <div
         ref={containerRef}
-        className="pro-fan-container"
+        className={`pro-fan-container ${!isMyTurn ? 'not-my-turn' : ''}`}
       >
         <div className="pro-fan-row">
           {hand.map((card, idx) => {
@@ -355,14 +355,14 @@ export default function HandFan({
             return (
               <div
                 key={card.id || `hand_card_${idx}`}
-                className={`pro-card-slot ${isMyTurn && playable ? 'is-playable-slot' : ''} ${isMyTurn && !playable ? 'is-locked-slot' : ''} ${isSelected ? 'is-selected-slot' : ''} ${isTopSelected ? 'is-top-selected-slot' : ''} ${isDragging ? 'is-dragging-slot' : ''}`}
+                className={`pro-card-slot ${!isMyTurn ? 'is-not-my-turn is-locked-slot' : (playable ? 'is-playable-slot' : 'is-locked-slot')} ${isSelected ? 'is-selected-slot' : ''} ${isTopSelected ? 'is-top-selected-slot' : ''} ${isDragging ? 'is-dragging-slot' : ''}`}
                 style={{
                   marginLeft: idx === 0 ? '0px' : `${marginOverlap}px`,
                   zIndex: cardZIndex,
                   transform: `translate3d(${finalX}px, ${finalY}px, 0) rotate(${finalRot}deg) scale(${finalScale})`,
                   touchAction: 'none'
                 }}
-                onPointerDown={(e) => handlePointerDown(card, playable, e)}
+                onPointerDown={(e) => isMyTurn && handlePointerDown(card, playable, e)}
               >
                 {/* Natural Stack Order Badge for Multi-Selection */}
                 {selectedCardIds.length > 1 && isSelected && (
@@ -379,7 +379,7 @@ export default function HandFan({
                 <CardComponent
                   card={card}
                   isPlayable={playable}
-                  disabled={isMyTurn && !playable}
+                  disabled={!isMyTurn || !playable}
                   size={containerWidth < 480 ? 'sm' : 'md'}
                   showGlow={isSelected}
                   customStyle={{

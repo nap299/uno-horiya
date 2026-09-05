@@ -65,30 +65,32 @@ export default function GameOverModal({ winner, isSelfWinner, onPlayAgain, onLea
   }, [phase, effect]);
 
   return (
-    <div className="modal-backdrop winner-backdrop-overlay">
+    <>
       {phase === 'EFFECT' ? (
-        /* Phase 1: Winner Cinematic Effect (Video or Image) */
-        <div className="winner-showcase-dialog animate-scale-up">
-          {/* Top Banner Header */}
-          <div className="winner-showcase-header">
-            <div className="winner-showcase-badge">
-              <Trophy className="text-gold animate-bounce" size={20} />
-              <span className="winner-showcase-title">
-                {isSelfWinner ? 'คุณคือผู้ชนะ!' : `ชัยชนะของ ${winner?.name || 'ผู้เล่น'}`}
-              </span>
-            </div>
-            <button 
-              className="winner-showcase-skip" 
-              onClick={handleEffectFinish}
-              title="ข้ามเอฟเฟค"
-            >
-              <span>ข้าม</span>
-              <FastForward size={14} />
-            </button>
+        /* Phase 1: 100% Fullscreen Seamless Winner Effect */
+        <div className="winner-fullscreen-backdrop animate-fade-in">
+          {/* Ambient Blurred Background Layer (fills any screen ratio seamlessly) */}
+          <div className="winner-ambient-layer">
+            {effect.type === 'video' ? (
+              <video
+                src={effect.src}
+                autoPlay
+                loop
+                playsInline
+                muted
+                className="winner-ambient-media"
+              />
+            ) : (
+              <img
+                src={effect.src}
+                alt=""
+                className="winner-ambient-media"
+              />
+            )}
           </div>
 
-          {/* Media Presentation Viewport */}
-          <div className="winner-media-container">
+          {/* Main Focused Media Layer (Full Screen Edge-to-Edge) */}
+          <div className="winner-fullscreen-media-container">
             {effect.type === 'video' ? (
               <video
                 ref={videoRef}
@@ -97,7 +99,7 @@ export default function GameOverModal({ winner, isSelfWinner, onPlayAgain, onLea
                 playsInline
                 muted
                 preload="auto"
-                className="winner-video-element"
+                className="winner-fullscreen-media-video"
                 onEnded={handleEffectFinish}
                 onError={(e) => {
                   console.warn('Winner video playback error:', e);
@@ -105,32 +107,48 @@ export default function GameOverModal({ winner, isSelfWinner, onPlayAgain, onLea
                 }}
               />
             ) : (
-              <div className="winner-image-container">
-                <img
-                  src={effect.src}
-                  alt={effect.title || 'Victory Effect'}
-                  className="winner-image-element animate-image-glow"
-                  onError={(e) => {
-                    console.warn('Winner image load error:', e);
-                    handleEffectFinish();
-                  }}
-                />
-              </div>
+              <img
+                src={effect.src}
+                alt={effect.title || 'Victory Effect'}
+                className="winner-fullscreen-media-img animate-image-glow"
+                onError={(e) => {
+                  console.warn('Winner image load error:', e);
+                  handleEffectFinish();
+                }}
+              />
             )}
           </div>
 
-          {/* Bottom Profile Info & Progress */}
-          <div className="winner-showcase-footer">
-            <div className="winner-showcase-subinfo">
-              <span className="winner-char-name">{winner?.name || 'ผู้ชนะ'}</span>
-              <span className="winner-char-dot">•</span>
-              <span className="winner-char-badge">{winner?.title || effect.title}</span>
+          {/* Floating Subtle Top Overlay (No borders, gradient fade) */}
+          <div className="winner-floating-header">
+            <div className="winner-floating-badge">
+              <Trophy className="text-gold animate-bounce" size={22} />
+              <span className="winner-floating-title">
+                {isSelfWinner ? 'คุณคือผู้ชนะ!' : `ชัยชนะของ ${winner?.name || 'ผู้เล่น'}`}
+              </span>
+            </div>
+            <button 
+              className="winner-floating-skip-btn" 
+              onClick={handleEffectFinish}
+              title="ข้ามเอฟเฟค"
+            >
+              <span>ข้าม</span>
+              <FastForward size={14} />
+            </button>
+          </div>
+
+          {/* Floating Subtle Bottom Overlay (No borders, gradient fade) */}
+          <div className="winner-floating-footer">
+            <div className="winner-floating-info">
+              <span className="winner-floating-name">{winner?.name || 'ผู้ชนะ'}</span>
+              <span className="winner-floating-dot">•</span>
+              <span className="winner-floating-badge-text">{winner?.title || effect.title}</span>
             </div>
 
             {effect.type === 'image' && (
-              <div className="winner-progress-track">
+              <div className="winner-floating-progress-track">
                 <div 
-                  className="winner-progress-thumb" 
+                  className="winner-floating-progress-thumb" 
                   style={{ width: `${imageProgress}%` }}
                 />
               </div>
@@ -139,6 +157,7 @@ export default function GameOverModal({ winner, isSelfWinner, onPlayAgain, onLea
         </div>
       ) : (
         /* Phase 2: Victory Summary with "เล่นใหม่" และ "ไปล็อบบี้" */
+        <div className="modal-backdrop winner-backdrop-overlay">
         <div className={`gameover-dialog animate-scale-up ${isSelfWinner ? 'winner-glow' : ''}`}>
           <div className="victory-crown-wrapper">
             <Trophy className="victory-crown animate-bounce" size={44} />
@@ -186,7 +205,8 @@ export default function GameOverModal({ winner, isSelfWinner, onPlayAgain, onLea
             </button>
           </div>
         </div>
+      </div>
       )}
-    </div>
+    </>
   );
 }
