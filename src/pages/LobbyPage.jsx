@@ -228,19 +228,22 @@ export default function LobbyPage({ onOpenProfile, onOpenRules }) {
           <div className="mode-features-list">
             <span className="feature-pill"><Users size={12} /> แสดงจำนวนคน</span>
             <span className="feature-pill"><DoorOpen size={12} /> เข้าร่วมได้ทันที</span>
-            <span className="feature-pill"><Sparkles size={12} /> อัปเดตสด</span>
           </div>
 
           <button
-            className="btn-solid-primary btn-browse-action"
+            className="btn-image-action"
             onClick={() => {
               sound.playCard('sapphire');
               setShowBrowseModal(true);
             }}
             disabled={isSubmitting}
           >
-            <Search size={16} />
-            <span>ค้นหา & เลือกล็อบบี้ห้อง</span>
+            <img
+              src="./search.webp"
+              alt="ค้นหา & เลือกล็อบบี้ห้อง"
+              className="browse-room-btn-img"
+              onError={(e) => { e.target.src = '/search.webp'; }}
+            />
           </button>
         </div>
 

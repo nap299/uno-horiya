@@ -845,7 +845,8 @@ body {
   filter: grayscale(40%);
 }
 
-.create-room-btn-img {
+.create-room-btn-img,
+.browse-room-btn-img {
   width: auto;
   max-width: 250px;
   max-height: 56px;

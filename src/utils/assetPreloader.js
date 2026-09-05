@@ -68,6 +68,7 @@ const ESSENTIAL_ASSETS = [
   './custom.webp',
   './join.webp',
   './browse_rooms.webp',
+  './search.webp',
   './bg.webp',
   './change_color.webp'
 ];
