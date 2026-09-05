@@ -97,7 +97,7 @@ export default function LobbyPage({ onOpenProfile, onOpenRules }) {
           src="./logo1.webp"
           alt="HORIYA"
           className="lobby-brand-logo-img"
-          onError={(e) => { e.target.src = './logo1.png'; }}
+          onError={(e) => { e.target.src = '/logo1.webp'; }}
         />
       </section>
 
@@ -159,7 +159,7 @@ export default function LobbyPage({ onOpenProfile, onOpenRules }) {
                 src="./quick_play.webp"
                 alt="Quick Play"
                 className="quick-play-icon-img"
-                onError={(e) => { e.target.src = './quick_play.png'; }}
+                onError={(e) => { e.target.src = '/quick_play.webp'; }}
               />
             </div>
             <div className="mode-header-text">
@@ -190,7 +190,7 @@ export default function LobbyPage({ onOpenProfile, onOpenRules }) {
               src="./create_room.webp"
               alt="สร้างห้องเล่นทันที"
               className="create-room-btn-img"
-              onError={(e) => { e.target.src = './create_room.png'; }}
+              onError={(e) => { e.target.src = '/create_room.webp'; }}
             />
           </button>
         </div>
@@ -203,7 +203,7 @@ export default function LobbyPage({ onOpenProfile, onOpenRules }) {
                 src="./custom.webp"
                 alt="Custom Room"
                 className="mode-custom-icon-img"
-                onError={(e) => { e.target.src = './custom.png'; }}
+                onError={(e) => { e.target.src = '/custom.webp'; }}
               />
             </div>
             <div className="mode-header-text">
@@ -236,7 +236,7 @@ export default function LobbyPage({ onOpenProfile, onOpenRules }) {
                 src="./join.webp"
                 alt="Join Room"
                 className="mode-custom-icon-img"
-                onError={(e) => { e.target.src = './join.png'; }}
+                onError={(e) => { e.target.src = '/join.webp'; }}
               />
             </div>
             <div className="mode-header-text">
