@@ -84,10 +84,6 @@ export default function LobbyPage({ onOpenProfile, onOpenRules }) {
     }
   };
 
-  const winRate = user?.stats?.gamesPlayed > 0
-    ? Math.round((user.stats.gamesWon / user.stats.gamesPlayed) * 100)
-    : 0;
-
   return (
     <div className="lobby-page-root animate-fade-in">
       {errorMsg && (
@@ -97,64 +93,43 @@ export default function LobbyPage({ onOpenProfile, onOpenRules }) {
         </div>
       )}
 
-      {/* 1. Hero Brand Bar */}
-      <section className="lobby-brand-hero">
-        <img
-          src="./logo1.webp"
-          alt="HORIYA"
-          className="lobby-brand-logo-img"
-          onError={(e) => { e.target.src = '/logo1.webp'; }}
-        />
-      </section>
-
-      {/* 2. Duelist Profile Summary (Solid Slate Card) */}
-      <section className="duelist-summary-card" onClick={onOpenProfile}>
-        <div className="duelist-info-left">
-          <div className="duelist-avatar-box">
-            {user?.avatar && user.avatar.startsWith('http') ? (
-              <img src={user.avatar} alt={user.name} />
-            ) : (
-              <AvatarIcon iconId={user?.avatar || 'flame'} size={34} />
-            )}
-            <span className="duelist-online-dot" />
-          </div>
-          <div className="duelist-text">
-            <div className="duelist-name-row">
-              <h2 className="duelist-name">{user?.name || 'ผู้เล่น'}</h2>
-              <span className="duelist-level-tag">LV.1</span>
+      {/* 1. Center Duelist Character Showcase (Prominent & Majestic, Senior Game UX/UI, No Stats) */}
+      <section
+        className="duelist-hero-showcase animate-scale-up"
+        onClick={onOpenProfile}
+        title="แตะเพื่อเปลี่ยนตัวละคร & ชื่อ"
+      >
+        <div className="duelist-hero-frame">
+          <div className="duelist-hero-avatar-wrapper">
+            <div className="duelist-hero-aura-glow" />
+            <div className="duelist-hero-avatar-ring">
+              {user?.avatar && user.avatar.startsWith('http') ? (
+                <img src={user.avatar} alt={user.name} className="duelist-hero-avatar-img" />
+              ) : (
+                <AvatarIcon iconId={user?.avatar || 'cat'} size={76} className="duelist-hero-avatar-icon" />
+              )}
+              <span className="duelist-online-gem" title="ออนไลน์" />
             </div>
-            <span className="duelist-title">{user?.title || 'นักเวทฝึกหัด'}</span>
-          </div>
-        </div>
-
-        <div className="duelist-stats-grid">
-          <div className="stat-box">
-            <div className="stat-head">
-              <Trophy size={13} className="stat-ico-gold" />
-              <span className="stat-title">ชนะ</span>
+            <div className="duelist-custom-hint-badge" title="แก้ไข">
+              <Sparkles size={13} className="sparkle-gold" />
             </div>
-            <span className="stat-val">{user?.stats?.gamesWon || 0}</span>
           </div>
 
-          <div className="stat-box">
-            <div className="stat-head">
-              <Shield size={13} className="stat-ico-blue" />
-              <span className="stat-title">วินเรต</span>
+          <div className="duelist-hero-meta">
+            <div className="duelist-hero-name-row">
+              <h2 className="duelist-hero-name">{user?.name || 'ผู้เล่น'}</h2>
+              <span className="duelist-hero-level">LV.1</span>
             </div>
-            <span className="stat-val">{winRate}%</span>
-          </div>
-
-          <div className="stat-box">
-            <div className="stat-head">
-              <Flame size={13} className="stat-ico-red" />
-              <span className="stat-title">สตรีค</span>
+            <div className="duelist-hero-title-box">
+              <span className="title-rune-glyph">✦</span>
+              <span className="duelist-hero-title-text">{user?.title || 'เสือเจ้าป่า'}</span>
+              <span className="title-rune-glyph">✦</span>
             </div>
-            <span className="stat-val">{user?.stats?.currentStreak || 0}</span>
           </div>
         </div>
       </section>
 
-      {/* 3. Game Mode Action Hub (3 Solid Tactical Cards) */}
+      {/* 2. Game Mode Action Hub (Tactical Cards) */}
       <section className="mode-selection-hub">
 
         {/* Mode 1: Quick Match (Primary Hero Card) */}

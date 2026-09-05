@@ -44,17 +44,13 @@ export default function Header({ onOpenProfile, onOpenRules }) {
 
   return (
     <header className="global-app-header">
-      <div className="header-brand">
-        <div className="brand-icon-wrapper" title="HORIYA">
-          <svg viewBox="0 0 32 32" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="3" y="6" width="11" height="17" rx="2.5" transform="rotate(-15 8.5 14.5)" fill="#FFD600" stroke="#FFFFFF" strokeWidth="1.5" />
-            <rect x="10.5" y="5" width="11" height="17" rx="2.5" fill="#168CFF" stroke="#FFFFFF" strokeWidth="1.5" />
-            <rect x="18" y="6" width="11" height="17" rx="2.5" transform="rotate(15 23.5 14.5)" fill="#FF1744" stroke="#FFFFFF" strokeWidth="1.5" />
-          </svg>
-        </div>
-        <div className="brand-text">
-          <h1 className="brand-title">HORIYA</h1>
-        </div>
+      <div className="header-brand" title="HORIYA ONLINE ARENA">
+        <img
+          src="./logo1.webp"
+          alt="HORIYA"
+          className="navbar-brand-logo-img"
+          onError={(e) => { e.target.src = '/logo1.webp'; }}
+        />
       </div>
 
       <div className="header-center-status hide-mobile">
